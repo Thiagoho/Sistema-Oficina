@@ -1,3 +1,6 @@
+Enviar para Project Github---
+https://www.youtube.com/watch?v=CMW8ZY1JpnI&ab_channel=CryswertonSilva
+
 ------------------------Sistema de Oficina Mecânica------------------------------------
 	Dependência usada no project
 =================================================================
@@ -60,6 +63,8 @@ ClienteRepository.java
 ClienteService.java
 ClienteController.java
 ==================================================================
+			1-> Model (Entidade) → 2. Repository → 3. Service → 4. Controller
+
 Entidade (Cliente.java)
 
 Repository (ClienteRepository.java)
