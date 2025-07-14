@@ -23,40 +23,40 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/clientes")
 public class ClienteController {
 	private final ClienteServic clienteServic;
-	
+
 	public ClienteController(ClienteServic clieneServic) {
 		this.clienteServic = clieneServic;
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<?> criarCliente( @Valid @RequestBody ClienteDTO dto) {
+	public ResponseEntity<?> criarCliente(@Valid @RequestBody ClienteDTO dto) {
 		Cliente cliente = new Cliente();
 		cliente.setNome(dto.getNome());
 		cliente.setTelefone(dto.getTelefone());
 		cliente.setEmail(dto.getEmail());
 		cliente.setEndereco(dto.getEndereco());
-		
+
 		Cliente salvo = clienteServic.salvar(cliente);
 		return ResponseEntity.ok(salvo);
-		
+
 	}
+
 	@GetMapping
 	public List<Cliente> listarCliente() {
 		return clienteServic.listarTodos();
 	}
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<Cliente> buscarPOrId(@PathVariable Long id) {
 		Optional<Cliente> cliente = clienteServic.buscarPorId(id);
-		return cliente.map(ResponseEntity::ok)
-				.orElse(ResponseEntity.notFound().build());
-		
+		return cliente.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+
 	}
-	
+
 	@PutMapping("/{id}")
 	public ResponseEntity<?> atualizarCliente(@PathVariable Long id, @RequestBody Cliente clienteAtualizado) {
 		Optional<Cliente> clienteOpt = clienteServic.buscarPorId(id);
-		if (!clienteOpt.isPresent() ) {
+		if (!clienteOpt.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		// Atualize os campos necessários (Exemplo abaixo, ajuste conforme seu model)
@@ -65,17 +65,17 @@ public class ClienteController {
 		existente.setTelefone(clienteAtualizado.getTelefone());
 		existente.setEmail(clienteAtualizado.getEmail());
 		existente.setEndereco(clienteAtualizado.getEndereco());
-	
-		
+
 		// Só atualize dataCadastro se realmente precisar (exemplo, pode ignorar)
-		if(clienteAtualizado.getDataCadastro() != null) {
+		if (clienteAtualizado.getDataCadastro() != null) {
 			existente.setDataCadastro(clienteAtualizado.getDataCadastro());
 		}
-		//Atualiza o campo ativo (Boolean)
+		// Atualiza o campo ativo (Boolean)
 		Cliente salvo = clienteServic.salvar(existente);
 		return ResponseEntity.ok(salvo);
-		
+
 	}
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
 		clienteServic.deletar(id);

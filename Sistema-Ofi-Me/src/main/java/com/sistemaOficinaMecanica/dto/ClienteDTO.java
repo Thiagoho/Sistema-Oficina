@@ -10,21 +10,21 @@ import jakarta.validation.constraints.Size;
  *  DTO representa os dados de entrada/saída).
   */
 public class ClienteDTO {
-	
+
 	@NotBlank(message = "Nome é obrigatório!")
 	@Size(max = 100, message = "Nome dever ter no máximo 100 caracters")
 	private String nome;
-	
+
 	@Size(max = 20, message = "Telefone dever ter o máximo 20 caracteres")
 	private String telefone;
-	
+
 	@Email(message = "E-mail inválido")
 	@Size(max = 50, message = "E-mail deve ter o máximo de 50 caracteres")
 	private String email;
-	
+
 	@Size(max = 255, message = "Endereço dever ter no máximo 255 caracteres")
 	private String endereco;
-	
+
 	@NotBlank(message = "CPF/CNPJ dever ter no máximo 20 caracteres")
 	private String cpfCnpj;
 
@@ -68,6 +68,4 @@ public class ClienteDTO {
 		this.cpfCnpj = cpfCnpj;
 	}
 
-
-	
 }

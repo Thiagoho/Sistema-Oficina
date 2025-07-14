@@ -6,37 +6,38 @@ import jakarta.persistence.*;
 import jakarta.persistence.Id;
 
 @Entity
-@Table(name="clientes") // Estamos buscando do BD table clientes.
+@Table(name = "clientes") // Estamos buscando do BD table clientes.
 public class Cliente {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idCliente;
-	
-	@Column(nullable = false, length=100)
+
+	@Column(nullable = false, length = 100)
 	private String nome;
-	
-	@Column (length = 20)
+
+	@Column(length = 20)
 	private String telefone;
-	
+
 	@Column(length = 50)
 	private String email;
-	
-	@Column (columnDefinition = "TEXT")
+
+	@Column(columnDefinition = "TEXT")
 	private String endereco;
-	
-	@Column (length = 20, unique = true)
+
+	@Column(length = 20, unique = true)
 	private String cpfCnpj;
-	
-	@Column (nullable = false, updatable = false)
+
+	@Column(nullable = false, updatable = false)
 	private LocalDateTime dataCadastro = LocalDateTime.now();
-	
-	@ Column(nullable = false)
+
+	@Column(nullable = false)
 	private Boolean ativo;
 
-	//contrutores
-	public Cliente() {}
-	
+	// contrutores
+	public Cliente() {
+	}
+
 	public Cliente(String nome, String telefone, String email, String endereco, String cpfCnpj) {
 		this.nome = nome;
 		this.telefone = telefone;
@@ -44,9 +45,10 @@ public class Cliente {
 		this.cpfCnpj = cpfCnpj;
 		this.dataCadastro = LocalDateTime.now();
 		this.ativo = true;
-				
+
 	}
-	//Getts / Setts
+
+	// Getts / Setts
 	public Long getIdCliente() {
 		return idCliente;
 	}
@@ -110,6 +112,5 @@ public class Cliente {
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
-	
-	
+
 }

@@ -8,10 +8,10 @@ import com.sistemaOficinaMecanica.model.Cliente;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
-    // Exemplo de método customizado:
-    boolean existsByCpfCnpj(String cpfCnpj);
+	// Exemplo de método customizado:
+	boolean existsByCpfCnpj(String cpfCnpj);
 
-    // Se quiser buscar cliente pelo nome (opcional)
-    // List<Cliente> findByNomeContainingIgnoreCase(String nome);
+	// Se quiser buscar cliente pelo nome (opcional)
+	// List<Cliente> findByNomeContainingIgnoreCase(String nome);
 
 }
