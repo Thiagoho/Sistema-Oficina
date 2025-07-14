@@ -11,6 +11,7 @@ public class Cliente {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "idCliente")
 	private Long idCliente;
 
 	@Column(nullable = false, length = 100)
