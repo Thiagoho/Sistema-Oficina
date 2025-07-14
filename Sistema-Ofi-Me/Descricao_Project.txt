@@ -1,0 +1,82 @@
+------------------------Sistema de Oficina Mecânica------------------------------------
+	Dependência usada no project
+=================================================================
+Spring Boot Starter Web (Api Rest)
+Spring Boot Starte Data JPA (ORDM)
+Mysql Driver (ou outro banco, exemplo MYSQL)
+Lombook (para getters/setters automático)
+String Boot DevTools para hot reload durante o dev
+Swagger/opanApi para documentação
+==================================================================
+Por onde começar?
+Comece sempre pelas tabelas-base (entidades raiz), que não dependem de outras para existir.
+clientes (Cliente)
+funcionarios (Funcionário)
+fornecedores (Fornecedor)
+categoriaServicos (Categoria de Serviço)
+pecas (Peça/Produto)
+servicos (Serviço)
+==================================================================
+Ordem sugerida para começar o backend
+Cliente
+Model, Repository, Service, Controller (CRUD)
+-------------------------------------------------------------------------------------------------------------------------------------
+Funcionário
+Model, Repository, Service, Controller (CRUD)
+-----------------------------------------------------------------------------------------------------------------------------------
+Fornecedor
+
+Categoria de Serviço
+
+Peça/Produto
+
+Serviço
+-----------------------------------------------------------------------------------------------------------------------------------
+Veículo
+Só depois de Cliente, pois tem idCliente como FK
+-----------------------------------------------------------------------------------------------------------------------------------
+Ordem de Serviço
+Só depois de Cliente, Veículo, Funcionário e Serviço prontos
+-----------------------------------------------------------------------------------------------------------------------------------
+Itens da Ordem de Serviço
+
+Peças Utilizadas
+
+Movimentação de Estoque
+
+Agendamentos
+==================================================================
+ciclo de desenvolvimento
+Para cada entidade:
+Crie o model (classe Java que representa a tabela)
+Crie o repository (interface JPA)
+Crie o service (regras de negócio, validação, etc)
+Crie o controller (endpoints REST para CRUD)
+==================================================================
+Comece pelo Cliente
+Primeiro, crie a entidade Cliente:
+Cliente.java
+ClienteRepository.java
+ClienteService.java
+ClienteController.java
+==================================================================
+Entidade (Cliente.java)
+
+Repository (ClienteRepository.java)
+
+Service (ClienteService.java)
+
+Controller (ClienteController.java)
+
+DTO (se desejar, para cadastro/retorno)
+==================================================================
+==================================================================
+
+==================================================================
+==================================================================
+==================================================================
+==================================================================
+==================================================================
+==================================================================
+==================================================================
+==================================================================
