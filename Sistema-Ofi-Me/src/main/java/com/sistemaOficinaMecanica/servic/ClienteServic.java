@@ -1,10 +1,12 @@
 package com.sistemaOficinaMecanica.servic;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.sistemaOficinaMecanica.dto.ClienteDTO;
 import com.sistemaOficinaMecanica.model.Cliente;
 import com.sistemaOficinaMecanica.repository.ClienteRepository;
 
@@ -16,15 +18,19 @@ public class ClienteServic {
 		this.clienteRepository = clienteRepository;
 
 	}
-
-	public Cliente salvar(Cliente cliente) {
-		// Aqui pode adicionar validações ou regras de negócio
-		// (Exemplo: virificar CPF/CNPJ único.
-		if (clienteRepository.existsByCpfCnpj(cliente.getCpfCnpj())) {
-			throw new IllegalArgumentException("CPF/CNPJ já cadastrado!");
-		}
-		return clienteRepository.save(cliente);
+	public Cliente salvar(ClienteDTO dto) {
+	    Cliente cliente = new Cliente();
+	    cliente.setNome(dto.getNome());
+	    cliente.setTelefone(dto.getTelefone());
+	    cliente.setEmail(dto.getEmail());
+	    cliente.setEndereco(dto.getEndereco());
+	    cliente.setCpfCnpj(dto.getCpfCnpj()); // ESSENCIAL!
+	    cliente.setAtivo(true);
+	    cliente.setDataCadastro(LocalDateTime.now());
+	    return clienteRepository.save(cliente);
 	}
+
+
 
 	public List<Cliente> listarTodos() {
 		return clienteRepository.findAll();
@@ -36,5 +42,8 @@ public class ClienteServic {
 
 	public void deletar(Long id) {
 		clienteRepository.deleteById(id);
+	}
+	public Cliente atualizar(Cliente cliente) {
+		return clienteRepository.save(cliente);
 	}
 }

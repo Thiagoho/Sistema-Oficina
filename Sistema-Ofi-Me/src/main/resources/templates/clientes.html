@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes - API</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <style>
+        .msg { margin: 10px 0; }
+    </style>
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Clientes</h2>
+    <div id="mensagem" class="msg"></div>
+    <table class="table" id="clientesTable">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+                <th>Endereço</th>
+                <th>CPF/CNPJ</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="clientesBody"></tbody>
+    </table>
+    <!-- Formulário único -->
+    <div class="card mt-4">
+        <div class="card-header" id="formTitle">Novo Cliente</div>
+        <div class="card-body">
+            <form id="clienteForm" autocomplete="off">
+                <input type="hidden" id="id">
+                <div class="mb-3">
+                    <label>Nome</label>
+                    <input type="text" id="nome" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>E-mail</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Telefone</label>
+                    <input type="text" id="telefone" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label>Endereço</label>
+                    <input type="text" id="endereco" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label>CPF/CNPJ</label>
+                    <input type="text" id="cpfCnpj" class="form-control">
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="ativo" checked>
+                    <label class="form-check-label" for="ativo">Ativo?</label>
+                </div>
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <button type="button" class="btn btn-secondary" onclick="limparFormulario()">Novo Cadastro</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+function mostrarMensagem(texto, tipo) {
+    const div = document.getElementById('mensagem');
+    div.innerHTML = `<div class="alert alert-${tipo}">${texto}</div>`;
+    setTimeout(() => div.innerHTML = '', 3000);
+}
+
+function carregarClientes() {
+    fetch('/api/clientes')
+        .then(res => res.json())
+        .then(clientes => {
+            const tbody = document.getElementById('clientesBody');
+            tbody.innerHTML = '';
+            clientes.forEach(cli => {
+                tbody.innerHTML += `
+                  <tr>
+                    <td>${cli.nome || ''}</td>
+                    <td>${cli.email || ''}</td>
+                    <td>${cli.telefone || ''}</td>
+                    <td>${cli.endereco || ''}</td>
+                    <td>${cli.cpfCnpj || ''}</td>
+                    <td>
+                        ${cli.ativo || cli.ativo === 1
+                            ? '<span class="badge bg-success">Ativo</span>'
+                            : '<span class="badge bg-danger">Inativo</span>'}
+                    </td>
+                    <td>
+                      <button class="btn btn-warning btn-sm" onclick="editarCliente('${cli.id || cli.idCliente}')">Editar</button>
+                      <button class="btn btn-danger btn-sm" onclick="excluirCliente('${cli.id || cli.idCliente}')">Excluir</button>
+                    </td>
+                  </tr>
+                `;
+            });
+        });
+}
+
+function limparFormulario() {
+    document.getElementById('id').value = "";
+    document.getElementById('nome').value = "";
+    document.getElementById('email').value = "";
+    document.getElementById('telefone').value = "";
+    document.getElementById('endereco').value = "";
+    document.getElementById('cpfCnpj').value = "";
+    document.getElementById('ativo').checked = true;
+    document.getElementById('formTitle').textContent = "Novo Cliente";
+}
+
+document.getElementById('clienteForm').onsubmit = function(e) {
+    e.preventDefault();
+    const id = document.getElementById('id').value;
+    const cliente = {
+        nome: document.getElementById('nome').value,
+        email: document.getElementById('email').value,
+        telefone: document.getElementById('telefone').value,
+        endereco: document.getElementById('endereco').value,
+        cpfCnpj: document.getElementById('cpfCnpj').value,
+        ativo: document.getElementById('ativo').checked
+    };
+    let url = '/api/clientes', method = 'POST';
+    if (id) {
+        url += '/' + id;
+        method = 'PUT';
+    }
+    fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cliente)
+    }).then(response => {
+        if(response.ok) {
+            mostrarMensagem('Cliente salvo com sucesso!', 'success');
+            carregarClientes();
+            limparFormulario();
+        } else {
+            response.text().then(txt => {
+                mostrarMensagem('Erro ao salvar cliente: ' + txt, 'danger');
+            });
+        }
+    });
+};
+
+function editarCliente(id) {
+    if (!id || id == 'undefined') {
+        mostrarMensagem("ID inválido para edição!", 'danger');
+        return;
+    }
+    fetch(`/api/clientes/${id}`)
+        .then(res => res.json())
+        .then(cli => {
+            document.getElementById('id').value = cli.id || cli.idCliente;
+            document.getElementById('nome').value = cli.nome || "";
+            document.getElementById('email').value = cli.email || "";
+            document.getElementById('telefone').value = cli.telefone || "";
+            document.getElementById('endereco').value = cli.endereco || "";
+            document.getElementById('cpfCnpj').value = cli.cpfCnpj || "";
+            document.getElementById('ativo').checked = cli.ativo == true || cli.ativo == 1;
+            document.getElementById('formTitle').textContent = "Editar Cliente";
+        });
+}
+
+function excluirCliente(id) {
+    if (!confirm("Deseja realmente excluir?")) return;
+    fetch(`/api/clientes/${id}`, { method: 'DELETE' })
+        .then(response => {
+            if(response.ok) {
+                mostrarMensagem('Cliente excluído!', 'success');
+                carregarClientes();
+            } else {
+                mostrarMensagem('Erro ao excluir cliente!', 'danger');
+            }
+        });
+}
+
+window.onload = carregarClientes;
+</script>
+</body>
+</html>

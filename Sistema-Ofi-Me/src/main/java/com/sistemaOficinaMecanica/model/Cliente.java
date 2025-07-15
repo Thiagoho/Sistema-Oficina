@@ -29,11 +29,11 @@ public class Cliente {
 	@Column(length = 20, unique = true)
 	private String cpfCnpj;
 
+	@Column(nullable = false)
+	private Boolean ativo;
 	@Column(nullable = false, updatable = false)
 	private LocalDateTime dataCadastro = LocalDateTime.now();
 
-	@Column(nullable = false)
-	private Boolean ativo;
 
 	// contrutores
 	public Cliente() {

@@ -16,11 +16,15 @@ import com.sistemaOficinaMecanica.dto.ClienteDTO;
 import com.sistemaOficinaMecanica.model.Cliente;
 import com.sistemaOficinaMecanica.servic.ClienteServic;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/clientes")
+@Tag(name = "Clientes", description = "API de clientes")
+
 public class ClienteController {
 	private final ClienteServic clienteServic;
 
@@ -30,13 +34,7 @@ public class ClienteController {
 
 	@PostMapping
 	public ResponseEntity<?> criarCliente(@Valid @RequestBody ClienteDTO dto) {
-		Cliente cliente = new Cliente();
-		cliente.setNome(dto.getNome());
-		cliente.setTelefone(dto.getTelefone());
-		cliente.setEmail(dto.getEmail());
-		cliente.setEndereco(dto.getEndereco());
-
-		Cliente salvo = clienteServic.salvar(cliente);
+		Cliente salvo = clienteServic.salvar(dto); // Passe o DTO
 		return ResponseEntity.ok(salvo);
 
 	}
@@ -65,13 +63,17 @@ public class ClienteController {
 		existente.setTelefone(clienteAtualizado.getTelefone());
 		existente.setEmail(clienteAtualizado.getEmail());
 		existente.setEndereco(clienteAtualizado.getEndereco());
+		existente.setCpfCnpj(clienteAtualizado.getCpfCnpj());
+		existente.setAtivo(clienteAtualizado.getAtivo());
 
 		// Só atualize dataCadastro se realmente precisar (exemplo, pode ignorar)
 		if (clienteAtualizado.getDataCadastro() != null) {
 			existente.setDataCadastro(clienteAtualizado.getDataCadastro());
 		}
-		// Atualiza o campo ativo (Boolean)
-		Cliente salvo = clienteServic.salvar(existente);
+		
+		// Atualiza o campo ativo se vier do font
+		existente.setAtivo(clienteAtualizado.getAtivo());	
+		Cliente salvo = clienteServic.atualizar(existente); // aqui deu erro 'salvar'
 		return ResponseEntity.ok(salvo);
 
 	}
