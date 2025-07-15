@@ -49,11 +49,13 @@
                 <input type="text" class="form-control" id="cpfCnpj">
             </div>
             <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+            <a href="clientes.html" class="btn btn-link w-100 mt-2">Voltar para Listagem</a>
         </form>
         <div id="mensagem" class="mt-3 text-center"></div>
     </div>
 </div>
 
+<!-- ...código HTML igual ao seu acima... -->
 <script>
 document.getElementById('clienteForm').addEventListener('submit', function(event) {
     event.preventDefault();
@@ -71,9 +73,12 @@ document.getElementById('clienteForm').addEventListener('submit', function(event
     })
     .then(response => {
         if (response.ok) {
+            // Mensagem rápida de sucesso e redirecionamento para clientes.html
             document.getElementById('mensagem').innerHTML =
-                '<span class="text-success">Cliente cadastrado com sucesso!</span>';
-            document.getElementById('clienteForm').reset();
+                '<span class="text-success">Cliente cadastrado com sucesso! Redirecionando...</span>';
+            setTimeout(function() {
+                window.location.href = "clientes.html";
+            }, 1000); // Aguarda 1 segundo para o usuário ver a mensagem
         } else {
             return response.text().then(texto => { throw new Error(texto); });
         }
@@ -84,5 +89,6 @@ document.getElementById('clienteForm').addEventListener('submit', function(event
     });
 });
 </script>
+
 </body>
 </html>

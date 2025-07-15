@@ -57,7 +57,7 @@
                 <input type="checkbox" class="form-check-input" id="ativo">
                 <label class="form-check-label" for="ativo">Ativo?</label>
             </div>
-            <button type="submit" class="btn btn-success w-100">Salvar Alterações</button>
+            <button type="submit" class="btn btn-success w-100 mb-2">Salvar Alterações</button>
             <a href="clientes.html" class="btn btn-link w-100 mt-2">Voltar para Listagem</a>
         </form>
     </div>
@@ -107,7 +107,10 @@ document.getElementById('editForm').onsubmit = function(e) {
         body: JSON.stringify(cliente)
     }).then(response => {
         if (response.ok) {
-            document.getElementById('mensagem').innerHTML = '<div class="alert alert-success">Alterações salvas com sucesso!</div>';
+            document.getElementById('mensagem').innerHTML = '<div class="alert alert-success">Alterações salvas com sucesso!<br>Redirecionando...</div>';
+            setTimeout(() => {
+                window.location.href = 'clientes.html';
+            }, 1200);
         } else {
             response.text().then(txt => {
                 document.getElementById('mensagem').innerHTML = '<div class="alert alert-danger">Erro ao editar cliente: ' + txt + '</div>';
@@ -115,6 +118,7 @@ document.getElementById('editForm').onsubmit = function(e) {
         }
     });
 };
+
 </script>
 </body>
 </html>
