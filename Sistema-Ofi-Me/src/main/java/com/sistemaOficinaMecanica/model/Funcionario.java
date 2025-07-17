@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "funcionarios")
 public class Funcionario {
 	
 	@Id
@@ -38,6 +39,9 @@ public class Funcionario {
 	
 	private Boolean ativo = true;
 
+	public Funcionario() {}
+	
+	// Getts / Setts
 	public Long getIdFuncionario() {
 		return idFuncionario;
 	}
