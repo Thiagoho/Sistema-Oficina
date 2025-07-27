@@ -14,15 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sistemaOficinaMecanica.dto.FornecedorDTO;
 import com.sistemaOficinaMecanica.model.Fornecedor;
+import com.sistemaOficinaMecanica.repository.FornecedorRepository;
 import com.sistemaOficinaMecanica.servic.FornecedorServic;
 
 @RestController
 @RequestMapping("/api/fornecedores")
 public class FornecedorController {
 	private final FornecedorServic fornecedorServic;
+	private final FornecedorRepository fornecedorRepository;
 	
-	public FornecedorController(FornecedorServic fornecedorServic) {
+	public FornecedorController(FornecedorServic fornecedorServic, FornecedorRepository fornecedorRepository) {
 		this.fornecedorServic = fornecedorServic;
+		this.fornecedorRepository = fornecedorRepository;
 	}
 	
 
@@ -43,8 +46,8 @@ public class FornecedorController {
     }
     
     @GetMapping
-    public List<Fornecedor> listar() {
-    	return fornecedorServic.listarTodos();
+    public List<Fornecedor> listarTodos() {
+    	return fornecedorRepository.findAll();
     }
     
     @GetMapping("/{id}")

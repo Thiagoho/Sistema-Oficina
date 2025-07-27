@@ -16,46 +16,46 @@ import jakarta.persistence.Table;
 @Table(name = "pecas")
 public class Peca {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long idPeca;
-	
-	@Column(nullable = false, length = 100)
-	private String nome;
-	
-	@Column(length = 50, unique = true)
-	private String codigo;
-	
-	@Column(columnDefinition = "text")
-	private String descricao;
-	
-	@Column(length = 50)
-	private String marca;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idPeca;
 
-	@Column(precision = 10, scale = 2)
-	private BigDecimal precoCusto;
-	
-	@Column(precision = 10, scale = 2)
-	private BigDecimal precoVenda;
-	
-	@Column
-	private Integer estoqueAtual = 0;
-	
-	@Column
-	private Integer EstoqueMinimo = 0;
-	
-	@Column
-	private String unidadeMedida = "UN";
-	
-	@Column(nullable = false)
-	private LocalDateTime dataCadastro = LocalDateTime.now();
-	
-	@Column
-	private Boolean ativo = true;
-	
-	// Relacionamento com Fornecedor
-	@ManyToOne
-	@JoinColumn(name = "id_fornecedor")
-	private Fornecedor fornecedor;
+    @Column(nullable = false, length = 100)
+    private String nome;
+
+    @Column(length = 50, unique = true)
+    private String codigo;
+
+    @Column(columnDefinition = "text")
+    private String descricao;
+
+    @Column(length = 50)
+    private String marca;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal precoCusto;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal precoVenda;
+
+    @Column
+    private Integer estoqueAtual = 0;
+
+    @Column
+    private Integer estoqueMinimo = 0;
+
+    @Column(length = 20)
+    private String unidadeMedida = "UN";
+
+    @Column(nullable = false)
+    private LocalDateTime dataCadastro = LocalDateTime.now();
+
+    @Column
+    private Boolean ativo = true;
+
+    // Relacionamento com Fornecedor
+    @ManyToOne
+    @JoinColumn(name = "id_fornecedor")
+    private Fornecedor fornecedor;
 
 	
 	
@@ -128,11 +128,11 @@ public class Peca {
 	}
 
 	public Integer getEstoqueMinimo() {
-		return EstoqueMinimo;
+		return estoqueMinimo;
 	}
 
 	public void setEstoqueMinimo(Integer estoqueMinimo) {
-		EstoqueMinimo = estoqueMinimo;
+		this.estoqueMinimo = estoqueMinimo;
 	}
 
 	public String getUnidadeMedida() {
@@ -167,7 +167,4 @@ public class Peca {
 		this.fornecedor = fornecedor;
 	}
 	
-	
-	
-
 }

@@ -10,6 +10,7 @@ public class FornecedorDTO {
 	
 	// Não precisa dataCadastro nem id nem ativo no DTO de Entrada!
 	
+	
 	public String getNome() {
 		return nome;
 	}
