@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.sistemaOficinaMecanica.dto.PecaDTO;
-import com.sistemaOficinaMecanica.model.Fornecedor;
 import com.sistemaOficinaMecanica.model.Peca;
 
 import com.sistemaOficinaMecanica.servic.PecaService;
