@@ -8,14 +8,18 @@
 body, html {
     min-height: 100vh;
     background: #f4f7fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .container {
-    margin-top: 40px;
+    margin: 40px 0;
     background: #fff;
     border-radius: 1.3rem;
     box-shadow: 0 6px 36px 0 rgba(0, 0, 0, 0.13);
     padding: 36px 36px 28px 36px;
-    max-width: 1050px;
+    max-width: 1600px;
+    width: 98vw;
 }
 th, td {
     font-size: 1.05rem;
@@ -26,10 +30,6 @@ tr.low-stock {
 tr.low-stock td {
     color: #e48900 !important;
     font-weight: 600;
-}
-#edicaoCard {
-    display: none;
-    margin-top: 32px;
 }
 </style>
 </head>
@@ -73,78 +73,25 @@ tr.low-stock td {
         </tbody>
     </table>
     <div id="mensagem" class="mt-3 text-center"></div>
-
-    <!-- Card de Edição Abaixo -->
-    <div id="edicaoCard" class="card">
-        <div class="card-body">
-            <h4 class="card-title">Editar Peça</h4>
-            <form id="formEdicao">
-                <input type="hidden" id="edit-idPeca">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Nome:</label>
-                        <input type="text" class="form-control" id="edit-nome" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Marca:</label>
-                        <input type="text" class="form-control" id="edit-marca" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Código:</label>
-                        <input type="text" class="form-control" id="edit-codigo" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Fornecedor:</label>
-                        <select class="form-control" id="edit-fornecedor" required>
-                            <!-- preenchido via JS -->
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Estoque Atual:</label>
-                        <input type="number" class="form-control" id="edit-estoqueAtual" min="0" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Estoque Mínimo:</label>
-                        <input type="number" class="form-control" id="edit-estoqueMinimo" min="0" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Unidade:</label>
-                        <select class="form-control" id="edit-unidade" required>
-                            <option value="UN">UN</option>
-                            <option value="CX">CX</option>
-                            <option value="PC">PC</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-center">
-                        <label class="form-label mb-0 me-2">Ativo:</label>
-                        <input type="checkbox" id="edit-ativo">
-                    </div>
-                </div>
-                <div class="text-end mt-3">
-                    <button type="button" class="btn btn-secondary" onclick="cancelarEdicao()">Cancelar</button>
-                    <button type="submit" class="btn btn-success px-5">Salvar</button>
-                </div>
-            </form>
-            <div id="edicaoMsg" class="mt-3 text-center"></div>
-        </div>
-    </div>
 </div>
 <script>
 let pecas = [];
+let editandoId = null;
 let fornecedores = [];
-let editandoPeca = null;
 
-// Carrega lista de fornecedores para o select (edição)
-function carregarFornecedores(callback) {
+window.onload = function() {
+    carregarFornecedores();
+    carregarPecas(); 
+};
+
+function carregarFornecedores() {
     fetch('http://localhost:8080/api/fornecedores')
     .then(resp => resp.json())
     .then(data => {
         fornecedores = data;
-        if (callback) callback();
     });
 }
 
-// Carrega peças
 function carregarPecas() {
     fetch('http://localhost:8080/api/pecas')
     .then(resp => resp.json())
@@ -154,7 +101,6 @@ function carregarPecas() {
     });
 }
 
-// Exibe tabela de peças
 function exibirPecas(lista) {
     const tbody = document.getElementById('pecasBody');
     tbody.innerHTML = '';
@@ -164,31 +110,68 @@ function exibirPecas(lista) {
     }
     lista.forEach(p => {
         const lowStock = p.estoqueAtual <= p.estoqueMinimo ? "low-stock" : "";
-        tbody.innerHTML += `
-            <tr class="${lowStock}">
-                <td>${p.nome}</td>
-                <td>${p.marca}</td>
-                <td>${p.codigo}</td>
-                <td>${p.fornecedor && p.fornecedor.nome ? p.fornecedor.nome : "-"}</td>
-                <td>${p.estoqueAtual}</td>
-                <td>${p.estoqueMinimo}</td>
-                <td>${p.unidadeMedida}</td>
-                <td>${p.ativo ? "Sim" : "Não"}</td>
-                <td>
-                    <button class="btn btn-warning btn-sm" onclick="mostrarEdicao(${p.idPeca})">Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="excluirPeca(${p.idPeca})">Excluir</button>
-                </td>
-            </tr>
-        `;
+        if (editandoId === p.idPeca) {
+            // Linha em modo edição
+            tbody.innerHTML += `
+                <tr class="${lowStock}">
+                    <td><input type="text" class="form-control" id="edit-nome" value="${p.nome}"></td>
+                    <td><input type="text" class="form-control" id="edit-marca" value="${p.marca}"></td>
+                    <td><input type="text" class="form-control" id="edit-codigo" value="${p.codigo}"></td>
+                    <td>
+                    <select class="form-control" id="edit-fornecedor">
+                    ${fornecedores.map(f => 
+                        `<option value="${f.idFornecedor}" ${Number(f.idFornecedor) === Number(p.fornecedor && p.fornecedor.idFornecedor) ? "selected" : ""}>${f.nome}</option>`
+                    ).join("")}
+                </select>
+
+
+                    </td>
+                    <td><input type="number" class="form-control" id="edit-estoqueAtual" value="${p.estoqueAtual}"></td>
+                    <td><input type="number" class="form-control" id="edit-estoqueMinimo" value="${p.estoqueMinimo}"></td>
+                    <td>
+                        <select class="form-control" id="edit-unidade">
+                            <option value="UN" ${p.unidadeMedida==="UN"?"selected":""}>UN</option>
+                            <option value="CX" ${p.unidadeMedida==="CX"?"selected":""}>CX</option>
+                            <option value="PC" ${p.unidadeMedida==="PC"?"selected":""}>PC</option>
+                        </select>
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" id="edit-ativo" ${p.ativo ? "checked" : ""}>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-success btn-sm" onclick="salvarEdicao(${p.idPeca})">Salvar</button>
+                            <button class="btn btn-secondary btn-sm" onclick="cancelarEdicao()">Cancelar</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        } else {
+            tbody.innerHTML += `
+                <tr class="${lowStock}">
+                    <td>${p.nome}</td>
+                    <td>${p.marca}</td>
+                    <td>${p.codigo}</td>
+                    <td>${p.fornecedor && p.fornecedor.nome ? p.fornecedor.nome : "-"}</td>
+                    <td>${p.estoqueAtual}</td>
+                    <td>${p.estoqueMinimo}</td>
+                    <td>${p.unidadeMedida}</td>
+                    <td class="text-center">${p.ativo ? "Sim" : "Não"}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editarPeca(${p.idPeca})">Editar</button>
+                        <button class="btn btn-danger btn-sm" onclick="excluirPeca(${p.idPeca})">Excluir</button>
+                    </td>
+                </tr>
+            `;
+        }
     });
 }
 
-// Filtro
 function filtrarPecas() {
     const nome = document.getElementById('filtroNome').value.toLowerCase();
     const marca = document.getElementById('filtroMarca').value.toLowerCase();
     const codigo = document.getElementById('filtroCodigo').value.toLowerCase();
-    const filtradas = pecas.filter(p =>
+    const filtradas = pecas.filter(p => 
         (!nome || p.nome.toLowerCase().includes(nome)) &&
         (!marca || p.marca.toLowerCase().includes(marca)) &&
         (!codigo || p.codigo.toLowerCase().includes(codigo))
@@ -196,42 +179,22 @@ function filtrarPecas() {
     exibirPecas(filtradas);
 }
 
-// Mostra card edição preenchido
-function mostrarEdicao(id) {
-    editandoPeca = pecas.find(p => p.idPeca === id);
-    if (!editandoPeca) return;
-
-    // Preencher campos
-    document.getElementById('edit-idPeca').value = editandoPeca.idPeca;
-    document.getElementById('edit-nome').value = editandoPeca.nome;
-    document.getElementById('edit-marca').value = editandoPeca.marca;
-    document.getElementById('edit-codigo').value = editandoPeca.codigo;
-    document.getElementById('edit-estoqueAtual').value = editandoPeca.estoqueAtual;
-    document.getElementById('edit-estoqueMinimo').value = editandoPeca.estoqueMinimo;
-    document.getElementById('edit-unidade').value = editandoPeca.unidadeMedida;
-    document.getElementById('edit-ativo').checked = editandoPeca.ativo;
-
-    // Fornecedores select
-    const select = document.getElementById('edit-fornecedor');
-    select.innerHTML = fornecedores.map(f =>
-        `<option value="${f.idFornecedor}" ${editandoPeca.fornecedor && editandoPeca.fornecedor.idFornecedor === f.idFornecedor ? "selected" : ""}>${f.nome}</option>`
-    ).join("");
-
-    document.getElementById('edicaoMsg').innerHTML = "";
-    document.getElementById('edicaoCard').style.display = "block";
-    window.scrollTo({top: document.getElementById('edicaoCard').offsetTop-40, behavior: 'smooth'});
+function editarPeca(id) {
+    editandoId = id;
+    exibirPecas(pecas);
 }
 
-// Cancelar edição
 function cancelarEdicao() {
-    editandoPeca = null;
-    document.getElementById('edicaoCard').style.display = "none";
+    editandoId = null;
+    exibirPecas(pecas);
 }
 
-// Salvar edição (PUT)
-document.getElementById('formEdicao').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const id = document.getElementById('edit-idPeca').value;
+function salvarEdicao(id) {
+    const idFornecedor = parseInt(document.getElementById('edit-fornecedor').value, 10);
+    if (!idFornecedor || isNaN(idFornecedor)) {
+        alert("Selecione um fornecedor válido!");
+        return;
+    }
     const pecaEditada = {
         nome: document.getElementById('edit-nome').value,
         marca: document.getElementById('edit-marca').value,
@@ -240,7 +203,7 @@ document.getElementById('formEdicao').addEventListener('submit', function(e) {
         estoqueMinimo: parseInt(document.getElementById('edit-estoqueMinimo').value),
         unidadeMedida: document.getElementById('edit-unidade').value,
         ativo: document.getElementById('edit-ativo').checked,
-        idFornecedor: parseInt(document.getElementById('edit-fornecedor').value)
+        idFornecedor: idFornecedor
     };
     fetch(`http://localhost:8080/api/pecas/${id}`, {
         method: 'PUT',
@@ -249,41 +212,18 @@ document.getElementById('formEdicao').addEventListener('submit', function(e) {
     })
     .then(resp => {
         if (resp.ok) {
-            document.getElementById('edicaoMsg').innerHTML = '<span class="text-success">Peça atualizada!</span>';
+            document.getElementById('mensagem').innerHTML = '<span class="text-success">Peça atualizada!</span>';
+            editandoId = null;
             carregarPecas();
-            setTimeout(cancelarEdicao, 1000);
         } else {
             return resp.text().then(t => { throw new Error(t); });
         }
     })
     .catch(err => {
-        document.getElementById('edicaoMsg').innerHTML = '<span class="text-danger">' + err.message + '</span>';
-    });
-});
-
-// Excluir peça
-function excluirPeca(id) {
-    if (!confirm("Tem certeza que deseja excluir esta peça?")) return;
-    fetch(`http://localhost:8080/api/pecas/${id}`, { method: 'DELETE' })
-    .then(resp => {
-        if (resp.ok) {
-            carregarPecas();
-            document.getElementById('mensagem').innerHTML =
-                '<span class="text-success">Peça excluída com sucesso!</span>';
-        } else {
-            throw new Error('Erro ao excluir peça.');
-        }
-    })
-    .catch(err => {
-        document.getElementById('mensagem').innerHTML =
-            `<span class="text-danger">${err.message}</span>`;
+        document.getElementById('mensagem').innerHTML = '<span class="text-danger">' + err.message + '</span>';
     });
 }
 
-// Inicialização
-window.onload = function() {
-    carregarFornecedores(carregarPecas);
-};
 </script>
 </body>
 </html>
