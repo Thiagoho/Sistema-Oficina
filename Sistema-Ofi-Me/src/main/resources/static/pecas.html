@@ -203,14 +203,14 @@ document.getElementById('pecaForm').addEventListener('submit', function(event) {
         return resp.text().then(txt => { throw new Error(txt); });
     })
     .then(() => {
-        document.getElementById('mensagem').innerHTML = '<span class="text-success">Peça cadastrada com sucesso!</span>';
-        document.getElementById('pecaForm').reset();
-        document.getElementById('ativo').checked = true; // Reset ativo
+        // Redireciona para a tela de listagem após o cadastro
+        window.location.href = "listagemPecas.html";
     })
     .catch(err => {
         document.getElementById('mensagem').innerHTML = '<span class="text-danger">Erro: ' + err.message + '</span>';
     });
 });
+
 </script>
 </body>
 </html>

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.sistemaOficinaMecanica.dto.FornecedorDTO;
 import com.sistemaOficinaMecanica.model.Fornecedor;
 import com.sistemaOficinaMecanica.repository.FornecedorRepository;
 
@@ -36,5 +37,19 @@ public class FornecedorServic {
 		// TODO Auto-generated method stub
 		return fornecedorRepository.findByNomeContainingIgnoreCase(nome);
 	}
+	public Fornecedor atualizar(Long id, FornecedorDTO dto) {
+	    Fornecedor fornecedor = fornecedorRepository.findById(id)
+	        .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado!"));
+
+	    // Atualiza os campos desejados:
+	    fornecedor.setNome(dto.getNome());
+	    fornecedor.setTelefone(dto.getTelefone());
+	    fornecedor.setEmail(dto.getEmail());
+	    // ... outros campos
+
+	    return fornecedorRepository.save(fornecedor);
+	}
+
+
 
 }

@@ -37,7 +37,6 @@ tr.low-stock td {
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3>Estoque de Peças/Produtos</h3>
-        <a href="pecas.html" class="btn btn-primary">Cadastrar Nova Peça</a>
     </div>
     <!-- Filtros -->
     <div class="row g-3 mb-4">
@@ -73,24 +72,16 @@ tr.low-stock td {
         </tbody>
     </table>
     <div id="mensagem" class="mt-3 text-center"></div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="pecas.html" class="btn btn-primary">Cadastrar Nova Peça</a>
+    </div>
 </div>
 <script>
 let pecas = [];
-let editandoId = null;
-let fornecedores = [];
 
 window.onload = function() {
-    carregarFornecedores();
-    carregarPecas(); 
+    carregarPecas();
 };
-
-function carregarFornecedores() {
-    fetch('http://localhost:8080/api/fornecedores')
-    .then(resp => resp.json())
-    .then(data => {
-        fornecedores = data;
-    });
-}
 
 function carregarPecas() {
     fetch('http://localhost:8080/api/pecas')
@@ -110,60 +101,21 @@ function exibirPecas(lista) {
     }
     lista.forEach(p => {
         const lowStock = p.estoqueAtual <= p.estoqueMinimo ? "low-stock" : "";
-        if (editandoId === p.idPeca) {
-            // Linha em modo edição
-            tbody.innerHTML += `
-                <tr class="${lowStock}">
-                    <td><input type="text" class="form-control" id="edit-nome" value="${p.nome}"></td>
-                    <td><input type="text" class="form-control" id="edit-marca" value="${p.marca}"></td>
-                    <td><input type="text" class="form-control" id="edit-codigo" value="${p.codigo}"></td>
-                    <td>
-                    <select class="form-control" id="edit-fornecedor">
-                    ${fornecedores.map(f => 
-                        `<option value="${f.idFornecedor}" ${Number(f.idFornecedor) === Number(p.fornecedor && p.fornecedor.idFornecedor) ? "selected" : ""}>${f.nome}</option>`
-                    ).join("")}
-                </select>
-
-
-                    </td>
-                    <td><input type="number" class="form-control" id="edit-estoqueAtual" value="${p.estoqueAtual}"></td>
-                    <td><input type="number" class="form-control" id="edit-estoqueMinimo" value="${p.estoqueMinimo}"></td>
-                    <td>
-                        <select class="form-control" id="edit-unidade">
-                            <option value="UN" ${p.unidadeMedida==="UN"?"selected":""}>UN</option>
-                            <option value="CX" ${p.unidadeMedida==="CX"?"selected":""}>CX</option>
-                            <option value="PC" ${p.unidadeMedida==="PC"?"selected":""}>PC</option>
-                        </select>
-                    </td>
-                    <td class="text-center">
-                        <input type="checkbox" id="edit-ativo" ${p.ativo ? "checked" : ""}>
-                    </td>
-                    <td>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-success btn-sm" onclick="salvarEdicao(${p.idPeca})">Salvar</button>
-                            <button class="btn btn-secondary btn-sm" onclick="cancelarEdicao()">Cancelar</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        } else {
-            tbody.innerHTML += `
-                <tr class="${lowStock}">
-                    <td>${p.nome}</td>
-                    <td>${p.marca}</td>
-                    <td>${p.codigo}</td>
-                    <td>${p.fornecedor && p.fornecedor.nome ? p.fornecedor.nome : "-"}</td>
-                    <td>${p.estoqueAtual}</td>
-                    <td>${p.estoqueMinimo}</td>
-                    <td>${p.unidadeMedida}</td>
-                    <td class="text-center">${p.ativo ? "Sim" : "Não"}</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" onclick="editarPeca(${p.idPeca})">Editar</button>
-                        <button class="btn btn-danger btn-sm" onclick="excluirPeca(${p.idPeca})">Excluir</button>
-                    </td>
-                </tr>
-            `;
-        }
+        tbody.innerHTML += `
+            <tr class="${lowStock}">
+                <td>${p.nome}</td>
+                <td>${p.marca}</td>
+                <td>${p.codigo}</td>
+                <td>${p.fornecedor && p.fornecedor.nome ? p.fornecedor.nome : "-"}</td>
+                <td>${p.estoqueAtual}</td>
+                <td>${p.estoqueMinimo}</td>
+                <td>${p.unidadeMedida}</td>
+                <td class="text-center">${p.ativo ? "Sim" : "Não"}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="excluirPeca(${p.idPeca})">Excluir</button>
+                </td>
+            </tr>
+        `;
     });
 }
 
@@ -179,51 +131,23 @@ function filtrarPecas() {
     exibirPecas(filtradas);
 }
 
-function editarPeca(id) {
-    editandoId = id;
-    exibirPecas(pecas);
-}
-
-function cancelarEdicao() {
-    editandoId = null;
-    exibirPecas(pecas);
-}
-
-function salvarEdicao(id) {
-    const idFornecedor = parseInt(document.getElementById('edit-fornecedor').value, 10);
-    if (!idFornecedor || isNaN(idFornecedor)) {
-        alert("Selecione um fornecedor válido!");
-        return;
-    }
-    const pecaEditada = {
-        nome: document.getElementById('edit-nome').value,
-        marca: document.getElementById('edit-marca').value,
-        codigo: document.getElementById('edit-codigo').value,
-        estoqueAtual: parseInt(document.getElementById('edit-estoqueAtual').value),
-        estoqueMinimo: parseInt(document.getElementById('edit-estoqueMinimo').value),
-        unidadeMedida: document.getElementById('edit-unidade').value,
-        ativo: document.getElementById('edit-ativo').checked,
-        idFornecedor: idFornecedor
-    };
-    fetch(`http://localhost:8080/api/pecas/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pecaEditada)
-    })
+function excluirPeca(id) {
+    if (!confirm("Tem certeza que deseja excluir esta peça?")) return;
+    fetch(`http://localhost:8080/api/pecas/${id}`, { method: 'DELETE' })
     .then(resp => {
         if (resp.ok) {
-            document.getElementById('mensagem').innerHTML = '<span class="text-success">Peça atualizada!</span>';
-            editandoId = null;
             carregarPecas();
+            document.getElementById('mensagem').innerHTML =
+                '<span class="text-success">Peça excluída com sucesso!</span>';
         } else {
-            return resp.text().then(t => { throw new Error(t); });
+            throw new Error('Erro ao excluir peça.');
         }
     })
     .catch(err => {
-        document.getElementById('mensagem').innerHTML = '<span class="text-danger">' + err.message + '</span>';
+        document.getElementById('mensagem').innerHTML =
+            `<span class="text-danger">${err.message}</span>`;
     });
 }
-
 </script>
 </body>
 </html>

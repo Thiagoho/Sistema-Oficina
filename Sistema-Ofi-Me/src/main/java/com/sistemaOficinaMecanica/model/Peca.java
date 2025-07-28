@@ -60,7 +60,7 @@ public class Peca {
 
 	
 	
-	public Peca() {}
+	//public Peca() {}
 	
 	// Getts /Setts
 	

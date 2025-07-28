@@ -14,7 +14,7 @@ public class PecaDTO {
 	    private Integer estoqueMinimo;
 	    private String unidadeMedida;
 	    private Boolean ativo;
-	    private Long idFornecedor;
+	    private Long idFornecedor; 
  // Relacionamento
 	
 	// Getts / Setts

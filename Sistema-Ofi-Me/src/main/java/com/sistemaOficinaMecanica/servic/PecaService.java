@@ -10,7 +10,7 @@ import com.sistemaOficinaMecanica.model.Fornecedor;
 import com.sistemaOficinaMecanica.model.Peca;
 import com.sistemaOficinaMecanica.repository.FornecedorRepository;
 import com.sistemaOficinaMecanica.repository.PecaRepository;
-
+//Mandado para o PecaController
 @Service
 public class PecaService {
     private final PecaRepository pecaRepository;
@@ -25,49 +25,46 @@ public class PecaService {
         return pecaRepository.findAll();
     }
 
-    public Peca salvar(Peca peca) {
-        return pecaRepository.save(peca);
-    }
-
-    public Optional<Peca> buscarPorId(Long id)  {
+    public Optional<Peca> buscarPorId(Long id) {
         return pecaRepository.findById(id);
-    }
-
-    public Peca buscarOuFalha(Long id) {
-        return pecaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Peça não encontrada!"));
     }
 
     public void deletarPeca(Long id) {
         pecaRepository.deleteById(id);
     }
 
-    public Peca atualizarPeca(Long id, PecaDTO dto, Fornecedor fornecedor) {
-        Peca peca = pecaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Peça não Encontrada!"));
+    // SALVAR recebendo DTO e idFornecedor
+    public Peca salvar(PecaDTO dto) {
+        Fornecedor fornecedor = fornecedorRepository.findById(dto.getIdFornecedor())
+                .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado!"));
 
+        Peca peca = new Peca();
         peca.setNome(dto.getNome());
         peca.setMarca(dto.getMarca());
         peca.setCodigo(dto.getCodigo());
+        peca.setDescricao(dto.getDescricao());
         peca.setPrecoCusto(dto.getPrecoCusto());
         peca.setPrecoVenda(dto.getPrecoVenda());
         peca.setEstoqueAtual(dto.getEstoqueAtual());
         peca.setEstoqueMinimo(dto.getEstoqueMinimo());
         peca.setUnidadeMedida(dto.getUnidadeMedida());
-        peca.setDescricao(dto.getDescricao());
         peca.setAtivo(dto.getAtivo());
         peca.setFornecedor(fornecedor);
 
         return pecaRepository.save(peca);
     }
 
-    // NOVO: salvar diretamente do DTO + Fornecedor
-    public Peca salvarDTO(PecaDTO dto, Fornecedor fornecedor) {
-        Peca peca = new Peca();
+    // Atualizar (opcional)
+    public Peca atualizar(Long id, PecaDTO dto) {
+        Peca peca = pecaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Peça não encontrada!"));
+        Fornecedor fornecedor = fornecedorRepository.findById(dto.getIdFornecedor())
+                .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado!"));
+
         peca.setNome(dto.getNome());
+        peca.setMarca(dto.getMarca());
         peca.setCodigo(dto.getCodigo());
         peca.setDescricao(dto.getDescricao());
-        peca.setMarca(dto.getMarca());
         peca.setPrecoCusto(dto.getPrecoCusto());
         peca.setPrecoVenda(dto.getPrecoVenda());
         peca.setEstoqueAtual(dto.getEstoqueAtual());
@@ -79,3 +76,24 @@ public class PecaService {
         return pecaRepository.save(peca);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
