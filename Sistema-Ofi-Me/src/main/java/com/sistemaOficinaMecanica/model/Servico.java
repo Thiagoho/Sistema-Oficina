@@ -1,5 +1,7 @@
 package com.sistemaOficinaMecanica.model;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 
 
@@ -10,14 +12,24 @@ public class Servico {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idServico;
 	
+	@Column(nullable = false, length = 100)
 	private String nome;
 	
+	@Column(columnDefinition = "text")
 	private String descricao;
 	
-	private Double precoPadrao;
+	@Column(precision = 10, scale = 2)
+	private BigDecimal precoPadrao;
+	
 	
 	private Integer TempoEstimado;
 	
+	private Boolean ativo = true;
+	
+	
+	//Relaciomanto com a table Catogoria de Serviço
+	@ManyToOne
+	@JoinColumn(name = "id_categoria_servicos")
 	private CategoriaServicos categoriaServico;
 	
 	public Servico() {}
@@ -46,11 +58,11 @@ public class Servico {
 		this.descricao = descricao;
 	}
 
-	public Double getPrecoPadrao() {
+	public BigDecimal getPrecoPadrao() {
 		return precoPadrao;
 	}
 
-	public void setPrecoPadrao(Double precoPadrao) {
+	public void setPrecoPadrao(BigDecimal precoPadrao) {
 		this.precoPadrao = precoPadrao;
 	}
 
@@ -62,6 +74,14 @@ public class Servico {
 		TempoEstimado = tempoEstimado;
 	}
 
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
+	}
+
 	public CategoriaServicos getCategoriaServico() {
 		return categoriaServico;
 	}
@@ -69,6 +89,6 @@ public class Servico {
 	public void setCategoriaServico(CategoriaServicos categoriaServico) {
 		this.categoriaServico = categoriaServico;
 	}
-	
-	
+
+		
 }

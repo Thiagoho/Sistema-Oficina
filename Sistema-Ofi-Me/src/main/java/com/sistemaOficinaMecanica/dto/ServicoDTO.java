@@ -1,12 +1,17 @@
 package com.sistemaOficinaMecanica.dto;
 
+import java.math.BigDecimal;
+
 public class ServicoDTO {
 	private String nome;
 	private String descricao;
-	private Double precoPadrao;
+	private BigDecimal precoPadrao;
 	private Integer tempoEstimado;
 	private Boolean ativo;
 	private Integer idCategoriaServico;
+	
+	
+	
 	public String getNome() {
 		return nome;
 	}
@@ -19,10 +24,10 @@ public class ServicoDTO {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	public Double getPrecoPadrao() {
+	public BigDecimal getPrecoPadrao() {
 		return precoPadrao;
 	}
-	public void setPrecoPadrao(Double precoPadrao) {
+	public void setPrecoPadrao(BigDecimal precoPadrao) {
 		this.precoPadrao = precoPadrao;
 	}
 	public Integer getTempoEstimado() {
