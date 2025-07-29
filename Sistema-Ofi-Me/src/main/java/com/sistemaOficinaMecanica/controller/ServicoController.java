@@ -1,9 +1,10 @@
 package com.sistemaOficinaMecanica.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+
 import org.springframework.web.bind.annotation.*;
 
 
@@ -32,7 +33,7 @@ public class ServicoController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Servico> buscarPorId(@PathVariable Integer id) {
+    public ResponseEntity<Servico> buscarPorId(@PathVariable Long id) {
     	return servicoService.buscarPorId(id)
     			.map(ResponseEntity::ok)
     			.orElse(ResponseEntity.notFound().build());
@@ -63,19 +64,26 @@ public class ServicoController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarServico(@PathVariable Integer id, @RequestBody ServicoDTO dto) {
-    	Servico servicoExistente = servicoService.buscarPorId(id);
-    	if (servicoExistente == null) {
-    		return ResponseEntity.notFound().build();
-    	}
-    	
-    	// Atualize os compos conforme DTO
-    	servicoExistente.setNome(dto.getNome());
-    	servicoExistente.setDescricao(dto.getDescricao());
-    	servicoExistente.setPrecoPadrao(dto.getPrecoPadrao());
-    	servicoExistente.setAtivo(dto.getAtivo());
-    	servicoExistente.setTempoEstimado(id);
+    public ResponseEntity<?> atualizarServico(@PathVariable Long id, @RequestBody ServicoDTO dto) {
+        Optional<Servico> opt = servicoService.buscarPorId(id);
+        if (!opt.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        Servico servicoExistente = opt.get();
+        // Atualize os campos:
+        servicoExistente.setNome(dto.getNome());
+        servicoExistente.setDescricao(dto.getDescricao());
+        // ... outros campos
+
+        // Se precisar atualizar categoria:
+        CategoriaServicos categoria = categoriaServicosRepository.findById(dto.getIdCategoriaServico())
+            .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+        servicoExistente.setCategoriaServico(categoria);
+
+        servicoService.salvar(servicoExistente);
+        return ResponseEntity.ok(servicoExistente);
     }
+
 }
 
 

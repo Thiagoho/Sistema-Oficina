@@ -26,7 +26,7 @@ public class ServicoService {
 		return servicoRepository.findAll();
 	}
 
-	public Optional<Servico> buscarPorId(Integer id) {
+	public Optional<Servico> buscarPorId(Long id) {
 		return servicoRepository.findById(id);// findById esta ocorrendo um erro?
 		
 	}
