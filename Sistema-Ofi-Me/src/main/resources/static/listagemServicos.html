@@ -96,7 +96,8 @@
                                 <td>${servico.categoriaServico ? servico.categoriaServico.nome : "--"}</td>
                                 <td>${servico.ativo ? "Sim" : "Não"}</td>
                                  <td>
-                                    <button class="btn btn-warning btn-sm me-2">Editar</button>
+                                 <button class="btn btn-warning btn-sm me-2" onclick="editarServico(${servico.idServico})">Editar</button>
+
                                     <button class="btn btn-danger btn-sm">Excluir</button>
                                 </td> 
                             </tr>
