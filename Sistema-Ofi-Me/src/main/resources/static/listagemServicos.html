@@ -75,42 +75,46 @@
         </div>
     </div>
 
-    <script>
-        function carregarServicos() {
-            fetch('http://localhost:8080/api/servicos')
-                .then(response => response.json())
-                .then(servicos => {
-                    const tbody = document.getElementById('servicosBody');
-                    tbody.innerHTML = '';
-                    if (servicos.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="6" class="text-center">Nenhum serviço cadastrado.</td></tr>`;
-                        return;
-                    }
-                    servicos.forEach(servico => {
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>${servico.nome}</td>
-                                <td>${servico.descricao || ""}</td>
-                                <td>R$ ${servico.precoPadrao ? servico.precoPadrao.toFixed(2) : "--"}</td>
-                                <td>${servico.tempoEstimado || "--"}</td>
-                                <td>${servico.categoriaServico ? servico.categoriaServico.nome : "--"}</td>
-                                <td>${servico.ativo ? "Sim" : "Não"}</td>
-                                 <td>
-                                 <button class="btn btn-warning btn-sm me-2" onclick="editarServico(${servico.idServico})">Editar</button>
-
-                                    <button class="btn btn-danger btn-sm">Excluir</button>
-                                </td> 
-                            </tr>
-                        `;
-                    });
-                })
-                .catch(error => {
-                    document.getElementById('mensagem').innerHTML =
-                        '<span class="text-danger">Erro ao carregar serviços.</span>';
+   <script>
+    function carregarServicos() {
+        fetch('http://localhost:8080/api/servicos')
+            .then(response => response.json())
+            .then(servicos => {
+                const tbody = document.getElementById('servicosBody');
+                tbody.innerHTML = '';
+                if (servicos.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center">Nenhum serviço cadastrado.</td></tr>`;
+                    return;
+                }
+                servicos.forEach(servico => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${servico.nome}</td>
+                            <td>${servico.descricao || ""}</td>
+                            <td>R$ ${servico.precoPadrao ? servico.precoPadrao.toFixed(2) : "--"}</td>
+                            <td>${servico.tempoEstimado || "--"}</td>
+                            <td>${servico.categoriaServico ? servico.categoriaServico.nome : "--"}</td>
+                            <td>${servico.ativo ? "Sim" : "Não"}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm me-2" onclick="editarServico(${servico.idServico})">Editar</button>
+                                <button class="btn btn-danger btn-sm">Excluir</button>
+                            </td>
+                        </tr>
+                    `;
                 });
-        }
+            })
+            .catch(error => {
+                document.getElementById('mensagem').innerHTML =
+                    '<span class="text-danger">Erro ao carregar serviços.</span>';
+            });
+    }
 
-        window.onload = carregarServicos;
-    </script>
+    function editarServico(id) {
+        window.location.href = `editarServico.html?id=${id}`;
+    }
+
+    window.onload = carregarServicos;
+</script>
+
 </body>
 </html>
