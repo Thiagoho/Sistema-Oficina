@@ -1,8 +1,10 @@
 package com.sistemaOficinaMecanica.servic;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+
 
 import com.sistemaOficinaMecanica.model.Servico;
 import com.sistemaOficinaMecanica.repository.ServicoRepository;
@@ -22,5 +24,10 @@ public class ServicoService {
 	
 	public List<Servico> listarTodos() {
 		return servicoRepository.findAll();
+	}
+
+	public Optional<Servico> buscarPorId(Integer id) {
+		return servicoRepository.findById(id);// findById esta ocorrendo um erro?
+		
 	}
 }

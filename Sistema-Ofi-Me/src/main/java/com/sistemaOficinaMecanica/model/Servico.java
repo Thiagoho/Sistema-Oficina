@@ -18,19 +18,15 @@ public class Servico {
 	@Column(columnDefinition = "text")
 	private String descricao;
 	
-<<<<<<< HEAD
+
 	@Column(name = "preco_padrao", precision = 10, scale = 2)
 	private BigDecimal precoPadrao;
-=======
-	@Column(precision = 10, scale = 2)
-	private Double precoPadrao;
->>>>>>> branch 'master' of https://github.com/Thiagoho/Sistema-Oficina.git
+
+
 	
-<<<<<<< HEAD
+
 	@Column(name = "tempo_estimado")
-=======
-	
->>>>>>> branch 'master' of https://github.com/Thiagoho/Sistema-Oficina.git
+
 	private Integer TempoEstimado;
 	
 	private Boolean ativo = true;

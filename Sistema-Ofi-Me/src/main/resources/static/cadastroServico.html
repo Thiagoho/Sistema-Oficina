@@ -2,138 +2,151 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastrar Serviço</title>
+    <title>Listagem de Serviços</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <style>
-       body {
-    background: radial-gradient(circle at 50% 40%, #19638794 0%, #000000 100%);
-    color: #fff;
-
-    min-height: 100vh;
-}
-
-        .centraliza {
-
+        body {
+            background: url('/public/imagemListagemServicos.png') repeat;
+            background-size: cover;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
-.card {
-    padding: 2.2rem ;
-   
-    box-shadow: 0 2px 24px 0 rgba(0,0,0,0.17);
-    width: 90vw;        /* 90% da largura da viewport */
-    max-width: 1300px;  /* Limite máximo, opcional */
-    background: rgba(0, 0, 0, 0.125);
-}
-
-
-
-        .form-label { color: #fff; font-weight: 1200; }
-        .btn-primary { background: #1e90ff; border: none; }
-        
-        .form-control {
-            background-color: #6b6985;
+        .container {
+            background: rgba(24, 29, 40, 0.90);
+            border-radius: 15px;
+            box-shadow: 0 6px 36px 0 rgba(0, 0, 0, 0.18);
+            padding: 28px 16px;
+            max-width: 900px;
+            margin-top: 36px;
         }
-        .form-select {
-        	font-size: 23px;
-        	color: #fff;
-        	background-color: #6b6985;
+        .table th, .table td {
+            color: #fff !important;
+            background: transparent;
+            font-size: 1.05rem;
+        }
+        .table th {
+            background: #162032 !important;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        h3, th {
+            color: #fff !important;
+        }
+        .btn-primary {
+            font-weight: 600;
+            box-shadow: 0 2px 12px #2b72ff25;
+        }
+        .btn-success {
+            font-weight: 600;
+            background-color: #29b933;
+            border-color: #23a12a;
+        }
+        .btn-success:hover {
+            background-color: #23a12a;
+            border-color: #1e8e23;
+        }
+        .btn-warning {
+            color: #fff !important;
+            background: linear-gradient(90deg, #f8be29 0%, #ffd259 100%);
+            border: 1px solid #fff2;
+            font-weight: 600;
+        }
+        .btn-danger {
+            color: #fff !important;
+            background: linear-gradient(90deg, #ed3e3e 0%, #ff6565 100%);
+            border: 1px solid #fff2;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <div class="centraliza">
-        <div class="card">
-            <h2 class="mb-4 text-center">Cadastrar Serviço</h2>
-            <form id="servicoForm">
-                <div class="mb-3">
-                    <label for="nome" class="form-label"><h3>Nome do Serviço</h3></label>
-                    <input type="text" class="form-control" id="nome" required>
-                </div>
-                <div class="mb-3">
-                    <label for="descricao" class="form-label"><h3>Descrição</h3></label>
-                    <textarea class="form-control" id="descricao" rows="2" required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="precoPadrao" class="form-label"><h3>Preço Padrão (R$)</h3></label>
-                    <input type="number" step="0.01" class="form-control" id="precoPadrao" required>
-                </div>
-                <div class="mb-3">
-                    <label for="tempoEstimado" class="form-label"><h3>Tempo Estimado (min)</h3></label>
-                    <input type="number" min="1" class="form-control" id="tempoEstimado" required>
-                </div>
-                <div class="mb-3">
-                    <label for="idCategoriaServico" class="form-label"><h3>Categorias</h3></label>
-                    <select class="form-select" id="idCategoriaServico" required>
-                        <option value="">Selecione...</option>
-                    </select>
-                </div>
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="ativo" checked>
-                    <label class="form-check-label" for="ativo">Ativo</label>
-                </div>
-                <!-- Coloque dentro do seu <form> na posição do botão -->
-<div class="d-flex justify-content-center mt-3">
-    <button type="submit" class="btn btn-primary px-5 py-2 fw-bold" style="font-size:1.1rem;">
-        Cadastrar Serviço
-    </button>
-</div>
-
-            </form>
-            <div id="mensagem" class="mt-3 text-center"></div>
+    <div class="container shadow p-4 rounded">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3>Listagem de Serviços</h3>
+            <a href="cadastroServico.html" class="btn btn-primary">Cadastrar Serviço</a>
+        </div>
+        <table class="table table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Preço Padrão</th>
+                    <th>Tempo Estimado (min)</th>
+                    <th>Categoria</th>
+                    <th>Ativo</th>
+                    <th style="width: 160px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="servicosBody">
+                <!-- Conteúdo dinâmico via JS -->
+            </tbody>
+        </table>
+        <div id="mensagem" class="mt-3 text-center"></div>
+        <div class="d-flex justify-content-end mt-3">
+            <a href="dashboard.html" class="btn btn-success">Voltar para o Dashboard</a>
         </div>
     </div>
-	<script>
-    // Carregar categorias via API e preencher o select
-    window.onload = function() {
-        fetch('http://localhost:8080/api/categorias-servicos') // Ajuste conforme seu endpoint!
-        .then(response => response.json())
-        .then(categorias => {
-            const select = document.getElementById('idCategoriaServico');
-            categorias.forEach(cat => {
-                const option = document.createElement('option');
-                option.value = cat.idCategoriaServicos;
-                option.textContent = cat.nome;
-                select.appendChild(option);
-            });
-        })
-        .catch(() => {
-            document.getElementById('mensagem').innerHTML =
-                '<span class="text-danger">Erro ao carregar categorias.</span>';
-        });
-    };
 
-    document.getElementById('servicoForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const servico = {
-            nome: document.getElementById('nome').value,
-            descricao: document.getElementById('descricao').value,
-            precoPadrao: parseFloat(document.getElementById('precoPadrao').value),
-            tempoEstimado: parseInt(document.getElementById('tempoEstimado').value),
-            idCategoriaServico: parseInt(document.getElementById('idCategoriaServico').value),
-            ativo: document.getElementById('ativo').value === 'true'
-        };
-        fetch('http://localhost:8080/api/servicos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(servico)
-        })
-        .then(resp => {
-            if (resp.ok) {
+   <script>
+    function carregarServicos() {
+        fetch('http://localhost:8080/api/servicos')
+            .then(response => response.json())
+            .then(servicos => {
+                const tbody = document.getElementById('servicosBody');
+                tbody.innerHTML = '';
+                if (servicos.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="text-center">Nenhum serviço cadastrado.</td></tr>`;
+                    return;
+                }
+                servicos.forEach(servico => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${servico.nome}</td>
+                            <td>${servico.descricao || ""}</td>
+                            <td>R$ ${servico.precoPadrao ? servico.precoPadrao.toFixed(2) : "--"}</td>
+                            <td>${servico.tempoEstimado || "--"}</td>
+                            <td>${servico.categoriaServico ? servico.categoriaServico.nome : "--"}</td>
+                            <td>${servico.ativo ? "Sim" : "Não"}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm me-2" onclick="editarServico(${servico.idServico})">Editar</button>
+                                <button class="btn btn-danger btn-sm" onclick="excluirServico(${servico.idServico})">Excluir</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            })
+            .catch(error => {
                 document.getElementById('mensagem').innerHTML =
-                  '<span class="text-success">Serviço cadastrado com sucesso!</span>';
-                document.getElementById('servicoForm').reset();
+                    '<span class="text-danger">Erro ao carregar serviços.</span>';
+            });
+    }
+
+    function editarServico(id) {
+        window.location.href = `editarServico.html?id=${id}`;
+    }
+
+    function excluirServico(id) {
+        if (!confirm("Tem certeza que deseja excluir este serviço?")) return;
+        fetch(`http://localhost:8080/api/servicos/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                carregarServicos();
+                document.getElementById('mensagem').innerHTML = 
+                    '<span class="text-success">Serviço excluído com sucesso!</span>';
             } else {
-                return resp.text().then(txt => { throw new Error(txt); });
+                throw new Error("Não foi possível excluir o serviço.");
             }
         })
         .catch(error => {
             document.getElementById('mensagem').innerHTML =
-                `<span class="text-danger">Erro: ${error.message}</span>`;
+                '<span class="text-danger">Erro: ' + error.message + '</span>';
         });
-    });
+    }
+
+    window.onload = carregarServicos;
 </script>
+
 </body>
 </html>
