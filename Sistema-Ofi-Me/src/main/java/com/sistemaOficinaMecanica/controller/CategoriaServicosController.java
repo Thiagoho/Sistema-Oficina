@@ -18,6 +18,7 @@ import jakarta.validation.Valid;
 public class CategoriaServicosController {
 
     private final CategoriaServicosServic servic;
+   
 
     @Autowired
     public CategoriaServicosController(CategoriaServicosServic servic) {

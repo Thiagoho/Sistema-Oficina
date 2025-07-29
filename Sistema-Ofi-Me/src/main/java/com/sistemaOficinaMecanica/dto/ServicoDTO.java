@@ -8,7 +8,8 @@ public class ServicoDTO {
 	private BigDecimal precoPadrao;
 	private Integer tempoEstimado;
 	private Boolean ativo;
-	private Integer idCategoriaServico;
+	private Long idCategoriaServico;
+
 	
 	
 	
@@ -42,10 +43,10 @@ public class ServicoDTO {
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
-	public Integer getIdCategoriaServico() {
+	public Long getIdCategoriaServico() {
 		return idCategoriaServico;
 	}
-	public void setIdCategoriaServico(Integer idCategoriaServico) {
+	public void setIdCategoriaServico(Long idCategoriaServico) {
 		this.idCategoriaServico = idCategoriaServico;
 	}
 	

@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 
 
 @Entity
-@Table(name = "sericos")
+@Table(name = "servicos")
 public class Servico {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,10 +18,10 @@ public class Servico {
 	@Column(columnDefinition = "text")
 	private String descricao;
 	
-	@Column(precision = 10, scale = 2)
+	@Column(name = "preco_padrao", precision = 10, scale = 2)
 	private BigDecimal precoPadrao;
 	
-	
+	@Column(name = "tempo_estimado")
 	private Integer TempoEstimado;
 	
 	private Boolean ativo = true;
