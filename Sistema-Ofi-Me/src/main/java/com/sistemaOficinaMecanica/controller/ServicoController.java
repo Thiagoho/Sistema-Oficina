@@ -40,7 +40,7 @@ public class ServicoController {
     }
 
     // POst: Criaçao tradicional (caso use o objeto serivco diretamento
-    @PostMapping
+    @PostMapping 
     public Servico criar(@RequestBody Servico servico) {
     	return servicoService.salvar(servico);
     }
