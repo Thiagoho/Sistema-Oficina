@@ -8,7 +8,7 @@
 <style>
 body, html {
 	min-height: 100vh;
-	background: #f5f7fa;
+	background: #21252905;
 }
 
 .centraliza {
@@ -23,11 +23,11 @@ body, html {
 	border-radius: 1.5rem;
 	box-shadow: 0 6px 30px 0 rgba(0, 0, 0, 0.13);
 	max-width: 480px;
-	background: #fff;
+	    background: rgba(24, 29, 40, 0.96);
 }
 
 .form-label {
-	color: #155a92;
+	color: #fff;
 	font-weight: 600;
 }
 
@@ -66,10 +66,10 @@ body, html {
 						<!-- Opções carregadas via JS -->
 					</select>
 				</div>
-				<div class="mb-3 form-check">
-					<input type="checkbox" class="form-check-input" id="ativo">
-					<label class="form-check-label" for="ativo">Ativo</label>
-				</div>
+				    <div class="col-md-4 d-flex align-items-center">
+                    <label class="form-label mb-0 me-2">Ativo:</label>
+                    <input class="custom-switch" type="checkbox" id="ativo" checked>
+                </div>
 				<button type="submit" class="btn btn-success w-100">Salvar
 					Alterações</button>
 				<a href="listagemServicos.html" class="btn btn-link w-100 mt-2">Voltar
