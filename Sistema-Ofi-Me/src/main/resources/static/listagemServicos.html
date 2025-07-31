@@ -124,6 +124,10 @@
                 carregarServicos();
                 document.getElementById('mensagem').innerHTML =
                     '<span class="text-success">Serviço excluído com sucesso!</span>';
+                // Remove a mensagem após 2 segundos
+                setTimeout(() => {
+                    document.getElementById('mensagem').innerHTML = '';
+                }, 2000); // 2000 ms = 2 segundos
             } else {
                 throw new Error("Não foi possível excluir o serviço.");
             }
