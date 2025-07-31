@@ -87,7 +87,12 @@ public class ServicoController {
         servicoService.salvar(servicoExistente);
         return ResponseEntity.ok(servicoExistente);
     }
-
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletar(@PathVariable Long id) {
+    	servicoService.deletar(id);
+    	return ResponseEntity.noContent().build();
+    }
 }
 
 

@@ -95,7 +95,8 @@
                             <td>${servico.ativo ? "Sim" : "Não"}</td>
                             <td>
                                 <button class="btn btn-warning btn-sm me-2" onclick="editarServico(${servico.idServico})">Editar</button>
-                                <button class="btn btn-danger btn-sm">Excluir</button>
+                                <button class="btn btn-danger btn-sm" onclick="excluirServico(${servico.idServico})">Excluir</button>
+
                             </td>
                         </tr>
                     `;
@@ -109,6 +110,26 @@
 
     function editarServico(id) {
         window.location.href = `editarServico.html?id=${id}`;
+    }
+	
+    function excluirServico(id) {
+        if (!confirm("Tem certeza que deseja excluir este serviço?")) return;
+        fetch(`http://localhost:8080/api/servicos/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                carregarServicos();
+                document.getElementById('mensagem').innerHTML =
+                    '<span class="text-success">Serviço excluído com sucesso!</span>';
+            } else {
+                throw new Error("Não foi possível excluir o serviço.");
+            }
+        })
+        .catch(error => {
+            document.getElementById('mensagem').innerHTML =
+                `<span class="text-danger">Erro: ${error.message}</span>`;
+        });
     }
 
     window.onload = carregarServicos;

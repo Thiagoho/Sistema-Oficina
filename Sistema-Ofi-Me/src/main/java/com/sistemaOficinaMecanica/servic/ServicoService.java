@@ -30,4 +30,9 @@ public class ServicoService {
 		return servicoRepository.findById(id);// findById esta ocorrendo um erro?
 		
 	}
+
+	public void deletar(Long id) {
+		// TODO Auto-generated method stub
+		servicoRepository.deleteById(id);
+	}
 }
