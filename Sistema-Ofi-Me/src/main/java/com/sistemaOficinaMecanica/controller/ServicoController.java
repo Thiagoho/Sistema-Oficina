@@ -75,6 +75,8 @@ public class ServicoController {
         // Atualize os campos:
         servicoExistente.setNome(dto.getNome());
         servicoExistente.setDescricao(dto.getDescricao());
+        servicoExistente.setPrecoPadrao(dto.getPrecoPadrao());
+        servicoExistente.setTempoEstimado(dto.getTempoEstimado());
         // ... outros campos
 
         // Se precisar atualizar categoria:
