@@ -26,14 +26,13 @@ public class Servico {
 	
 
 	@Column(name = "tempo_estimado")
-
 	private Integer TempoEstimado;
 	
 	private Boolean ativo = true;
 	
 	
 	//Relaciomanto com a table Catogoria de Serviço
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER) // importante EAGER
 	@JoinColumn(name = "id_categoria_servicos")
 	private CategoriaServicos categoriaServico;
 	

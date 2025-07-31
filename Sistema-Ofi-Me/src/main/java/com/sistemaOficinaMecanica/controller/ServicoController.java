@@ -40,13 +40,13 @@ public class ServicoController {
     }
 
     // POst: Criaçao tradicional (caso use o objeto serivco diretamento
-    @PostMapping 
+ /*   @PostMapping("/dto") 
     public Servico criar(@RequestBody Servico servico) {
     	return servicoService.salvar(servico);
-    }
+    }*/
     
     // Post: Crianção via DTO (recomendado para frontend modernos, validação, etc)
-    @PostMapping("/dto")
+    @PostMapping
     public ResponseEntity<?> criarServico(@RequestBody ServicoDTO dto) {
         CategoriaServicos categoria = categoriaServicosRepository.findById(dto.getIdCategoriaServico())
             .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
@@ -60,8 +60,10 @@ public class ServicoController {
         servico.setCategoriaServico(categoria);
 
         Servico salvo = servicoService.salvar(servico);
-        return ResponseEntity.ok(salvo);
+        Servico completo = servicoService.buscarPorId(salvo.getIdServico()).orElse(salvo);
+        return ResponseEntity.ok(completo);
     }
+
     
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizarServico(@PathVariable Long id, @RequestBody ServicoDTO dto) {
