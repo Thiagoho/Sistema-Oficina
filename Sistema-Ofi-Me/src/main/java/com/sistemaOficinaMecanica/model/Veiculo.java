@@ -2,11 +2,19 @@ package com.sistemaOficinaMecanica.model;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "veiculos")
 public class Veiculo {
 
 	@Id 
@@ -23,17 +31,20 @@ public class Veiculo {
 	
 	private String cor;
 	
-	private Combustivel combustivel = Combustivel.FLEX;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Combustivel combustivel = Combustivel.Flex;
 	
-	private Integer quilomentragem;
+	private Integer quilometragem;
 	
 	private String chassi;
 	
-	private LocalDateTime cadaCadastro;
+	
+	private LocalDateTime dataCadastro;
 	
 	private Boolean ativo = true;
 	
-	@ManyToOne
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "id_cliente", nullable = false)
 	private Cliente cliente;
 
@@ -93,12 +104,12 @@ public class Veiculo {
 		this.combustivel = combustivel;
 	}
 
-	public Integer getQuilomentragem() {
-		return quilomentragem;
+	public Integer getQuilometragem() {
+		return quilometragem;
 	}
 
-	public void setQuilomentragem(Integer quilomentragem) {
-		this.quilomentragem = quilomentragem;
+	public void setQuilometragem(Integer quilometragem) {
+		this.quilometragem = quilometragem;
 	}
 
 	public String getChassi() {
@@ -109,12 +120,12 @@ public class Veiculo {
 		this.chassi = chassi;
 	}
 
-	public LocalDateTime getCadaCadastro() {
-		return cadaCadastro;
+	public LocalDateTime getDataCadastro() {
+		return dataCadastro;
 	}
 
-	public void setCadaCadastro(LocalDateTime cadaCadastro) {
-		this.cadaCadastro = cadaCadastro;
+	public void setDataCadastro(LocalDateTime dataCadastro) {
+		this.dataCadastro = dataCadastro;
 	}
 
 	public Boolean getAtivo() {

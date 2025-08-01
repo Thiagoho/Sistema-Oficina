@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Veículo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <style>
+        body, html {
+            background: url('/public/imagemCadastroVeiculo.png') no-repeat center;
+            background-size: cover;
+            min-height: 100vh;
+            height: 100%;
+        }
+        .centraliza {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            padding: 2rem;
+            border-radius: 1.5rem;
+            background: rgba(25, 27, 31, 0.95);
+            color: #fff;
+            box-shadow: 0 2px 24px 0 rgba(0,0,0,0.18);
+            min-width: 350px;
+            max-width: 400px;
+        }
+        .form-label { color: #80FF44; font-weight: 600; }
+        .btn-success { background: #29b933; border: none; font-weight: 600;}
+    </style>
+</head>
+<body>
+    <div class="centraliza">
+        <div class="card">
+            <h2 class="mb-4 text-center">Cadastro de Veículo</h2>
+            <form id="veiculoForm">
+                <div class="mb-3">
+                    <label for="modelo" class="form-label">Modelo:</label>
+                    <input type="text" class="form-control" id="modelo" required>
+                </div>
+                <div class="mb-3">
+                    <label for="placa" class="form-label">Placa:</label>
+                    <input type="text" class="form-control" id="placa" maxlength="10" required>
+                </div>
+                <div class="mb-3">
+                    <label for="ano" class="form-label">Ano:</label>
+                    <input type="number" class="form-control" id="ano" min="1900" max="2100" required>
+                </div>
+                <div class="mb-3">
+                    <label for="cliente" class="form-label">Cliente:</label>
+                    <select class="form-control" id="cliente" required>
+                        <option value="">Selecione o cliente...</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Cadastrar Veículo</button>
+                <a href="listagemVeiculos.html" class="btn btn-link w-100 mt-2">Voltar à lista</a>
+            </form>
+            <div id="mensagem" class="mt-3 text-center"></div>
+        </div>
+    </div>
+    <script>
+        // Carregar clientes no select
+        window.onload = function() {
+            fetch('http://localhost:8080/api/clientes')
+                .then(res => res.json())
+                .then(clientes => {
+                    const select = document.getElementById('cliente');
+                    clientes.forEach(cli => {
+                        let op = document.createElement('option');
+                        op.value = cli.idCliente;
+                        op.textContent = cli.nome;
+                        select.appendChild(op);
+                    });
+                })
+                .catch(() => {
+                    document.getElementById('mensagem').innerHTML =
+                        '<span class="text-danger">Erro ao carregar clientes!</span>';
+                });
+        };
+
+        document.getElementById('veiculoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const veiculo = {
+                modelo: document.getElementById('modelo').value,
+                placa: document.getElementById('placa').value,
+                ano: parseInt(document.getElementById('ano').value),
+                idCliente: parseInt(document.getElementById('cliente').value)
+            };
+            fetch('http://localhost:8080/api/veiculos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(veiculo)
+            })
+            .then(response => {
+                if(response.ok) {
+                    document.getElementById('mensagem').innerHTML =
+                        '<span class="text-success">Veículo cadastrado com sucesso!</span>';
+                    document.getElementById('veiculoForm').reset();
+                } else {
+                    return response.text().then(txt => { throw new Error(txt); });
+                }
+            })
+            .catch(error => {
+                document.getElementById('mensagem').innerHTML =
+                    `<span class="text-danger">Erro: ${error.message}</span>`;
+            });
+        });
+    </script>
+</body>
+</html>
