@@ -56,7 +56,6 @@ public class VeiculoController {
 	    // Conversão do String recebido para Enum:
 	    veiculo.setCombustivel(Combustivel.valueOf(dto.getCombustivel().toUpperCase()));
 	    veiculo.setQuilometragem(dto.getQuilometragem());
-	    veiculo.setChassi(dto.getChassi());
 	    veiculo.setAtivo(dto.getAtivo());
 	    veiculo.setCliente(cliente);
 	    
@@ -76,7 +75,6 @@ public class VeiculoController {
                 veiculo.setCor(novoVeiculo.getCor());
                 veiculo.setCombustivel(novoVeiculo.getCombustivel());
                 veiculo.setQuilometragem(novoVeiculo.getQuilometragem());
-                veiculo.setChassi(novoVeiculo.getChassi());
                 veiculo.setAtivo(novoVeiculo.getAtivo());
 				// Relacionamento com cliente
                 if (novoVeiculo.getCliente() != null && novoVeiculo.getCliente().getIdCliente() != null) {

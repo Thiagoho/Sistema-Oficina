@@ -40,9 +40,7 @@ public class Veiculo {
 	}
 
 	private Integer quilometragem;
-	
-	private String chassi;
-	
+
 	
 	private LocalDateTime dataCadastro;
 	
@@ -108,13 +106,6 @@ public class Veiculo {
 		this.quilometragem = quilometragem;
 	}
 
-	public String getChassi() {
-		return chassi;
-	}
-
-	public void setChassi(String chassi) {
-		this.chassi = chassi;
-	}
 
 	public LocalDateTime getDataCadastro() {
 		return dataCadastro;
