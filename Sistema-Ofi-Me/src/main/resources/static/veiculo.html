@@ -31,31 +31,62 @@
     </style>
 </head>
 <body>
-    <div class="centraliza">
-        <div class="card">
-            <h2 class="mb-4 text-center">Cadastro de Veículo</h2>
-            <form id="veiculoForm">
-                <div class="mb-3">
-                    <label for="modelo" class="form-label">Modelo:</label>
-                    <input type="text" class="form-control" id="modelo" required>
-                </div>
-                <div class="mb-3">
-                    <label for="placa" class="form-label">Placa:</label>
-                    <input type="text" class="form-control" id="placa" maxlength="10" required>
-                </div>
-                <div class="mb-3">
-                    <label for="ano" class="form-label">Ano:</label>
-                    <input type="number" class="form-control" id="ano" min="1900" max="2100" required>
-                </div>
-                <div class="mb-3">
-                    <label for="cliente" class="form-label">Cliente:</label>
-                    <select class="form-control" id="cliente" required>
-                        <option value="">Selecione o cliente...</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-success w-100">Cadastrar Veículo</button>
-                <a href="listagemVeiculos.html" class="btn btn-link w-100 mt-2">Voltar à lista</a>
-            </form>
+<form id="veiculoForm">
+    <div class="mb-3">
+        <label for="modelo" class="form-label">Modelo:</label>
+        <input type="text" class="form-control" id="modelo" required>
+    </div>
+    <div class="mb-3">
+        <label for="marca" class="form-label">Marca:</label>
+        <input type="text" class="form-control" id="marca" required>
+    </div>
+    <div class="mb-3">
+        <label for="placa" class="form-label">Placa:</label>
+        <input type="text" class="form-control" id="placa" maxlength="10" required>
+    </div>
+    <div class="mb-3">
+        <label for="ano" class="form-label">Ano:</label>
+        <input type="number" class="form-control" id="ano" min="1900" max="2100" required>
+    </div>
+    <div class="mb-3">
+        <label for="cor" class="form-label">Cor:</label>
+        <input type="text" class="form-control" id="cor">
+    </div>
+    <div class="mb-3">
+        <label for="combustivel" class="form-label">Combustível:</label>
+        <select class="form-control" id="combustivel">
+            <option value="">Selecione...</option>
+            <option value="Gasolina">Gasolina</option>
+            <option value="Álcool">Álcool</option>
+            <option value="Flex">Flex</option>
+            <option value="Diesel">Diesel</option>
+            <option value="GNV">GNV</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="quilometragem" class="form-label">Quilometragem:</label>
+        <input type="number" class="form-control" id="quilometragem">
+    </div>
+    <div class="mb-3">
+        <label for="chassi" class="form-label">Chassi:</label>
+        <input type="text" class="form-control" id="chassi">
+    </div>
+    <div class="mb-3">
+        <label for="ativo" class="form-label">Ativo:</label>
+        <select class="form-control" id="ativo">
+            <option value="1" selected>Sim</option>
+            <option value="0">Não</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="cliente" class="form-label">Cliente:</label>
+        <select class="form-control" id="cliente" required>
+            <option value="">Selecione o cliente...</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success w-100">Cadastrar Veículo</button>
+    <a href="listagemVeiculos.html" class="btn btn-link w-100 mt-2">Voltar à lista</a>
+</form>
             <div id="mensagem" class="mt-3 text-center"></div>
         </div>
     </div>
@@ -82,10 +113,16 @@
         document.getElementById('veiculoForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const veiculo = {
-                modelo: document.getElementById('modelo').value,
-                placa: document.getElementById('placa').value,
-                ano: parseInt(document.getElementById('ano').value),
-                idCliente: parseInt(document.getElementById('cliente').value)
+            	    modelo: document.getElementById('modelo').value,
+            	    marca: document.getElementById('marca').value,
+            	    placa: document.getElementById('placa').value,
+            	    ano: parseInt(document.getElementById('ano').value),
+            	    cor: document.getElementById('cor').value,
+            	    combustivel: document.getElementById('combustivel').value,
+            	    quilometragem: document.getElementById('quilometragem').value ? parseInt(document.getElementById('quilometragem').value) : null,
+            	    chassi: document.getElementById('chassi').value,
+            	    ativo: parseInt(document.getElementById('ativo').value),
+            	    idCliente: parseInt(document.getElementById('cliente').value)
             };
             fetch('http://localhost:8080/api/veiculos', {
                 method: 'POST',

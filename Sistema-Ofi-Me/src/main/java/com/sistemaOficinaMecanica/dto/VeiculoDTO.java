@@ -3,18 +3,28 @@ package com.sistemaOficinaMecanica.dto;
 public class VeiculoDTO {
 
 	    private String modelo;
+	    private String marca;
 	    private String placa;
 	    private Integer ano;
+	    private String cor;
+	    private String combustivel;
+	    private Integer quilometragem;
+	    private String Chassi;
 	    private Boolean ativo;
 	    private Long idCliente;
 	    
-	    
-	    
+	    //Getts //Setts
 		public String getModelo() {
 			return modelo;
 		}
 		public void setModelo(String modelo) {
 			this.modelo = modelo;
+		}
+		public String getMarca() {
+			return marca;
+		}
+		public void setMarca(String marca) {
+			this.marca = marca;
 		}
 		public String getPlaca() {
 			return placa;
@@ -28,6 +38,30 @@ public class VeiculoDTO {
 		public void setAno(Integer ano) {
 			this.ano = ano;
 		}
+		public String getCor() {
+			return cor;
+		}
+		public void setCor(String cor) {
+			this.cor = cor;
+		}
+		public String getCombustivel() {
+			return combustivel;
+		}
+		public void setCombustivel(String combustivel) {
+			this.combustivel = combustivel;
+		}
+		public Integer getQuilometragem() {
+			return quilometragem;
+		}
+		public void setQuilometragem(Integer quilometragem) {
+			this.quilometragem = quilometragem;
+		}
+		public String getChassi() {
+			return Chassi;
+		}
+		public void setChassi(String chassi) {
+			Chassi = chassi;
+		}
 		public Boolean getAtivo() {
 			return ativo;
 		}
@@ -40,6 +74,9 @@ public class VeiculoDTO {
 		public void setIdCliente(Long idCliente) {
 			this.idCliente = idCliente;
 		}
-
-
-}
+	    
+	    
+		
+	    
+	    
+		}

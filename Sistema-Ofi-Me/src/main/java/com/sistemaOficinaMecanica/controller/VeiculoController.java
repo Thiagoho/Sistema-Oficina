@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sistemaOficinaMecanica.dto.VeiculoDTO;
 import com.sistemaOficinaMecanica.model.Cliente;
+import com.sistemaOficinaMecanica.model.Combustivel;
 import com.sistemaOficinaMecanica.model.Veiculo;
 import com.sistemaOficinaMecanica.repository.ClienteRepository;
 import com.sistemaOficinaMecanica.repository.VeiculoRepository;
@@ -48,10 +49,17 @@ public class VeiculoController {
 	    }
 	    Veiculo veiculo = new Veiculo();
 	    veiculo.setModelo(dto.getModelo());
+	    veiculo.setMarca(dto.getMarca());
 	    veiculo.setPlaca(dto.getPlaca());
 	    veiculo.setAno(dto.getAno());
+	    veiculo.setCor(dto.getCor());
+	    // Conversão do String recebido para Enum:
+	    veiculo.setCombustivel(Combustivel.valueOf(dto.getCombustivel().toUpperCase()));
+	    veiculo.setQuilometragem(dto.getQuilometragem());
+	    veiculo.setChassi(dto.getChassi());
 	    veiculo.setAtivo(dto.getAtivo());
 	    veiculo.setCliente(cliente);
+	    
 	    Veiculo salvo = veiculoRepository.save(veiculo);
 	    return ResponseEntity.ok(salvo);
 	}
@@ -62,8 +70,13 @@ public class VeiculoController {
         return veiculoRepository.findById(id)
             .map(veiculo -> {
                 veiculo.setModelo(novoVeiculo.getModelo());
+                veiculo.setMarca(novoVeiculo.getMarca());
                 veiculo.setPlaca(novoVeiculo.getPlaca());
                 veiculo.setAno(novoVeiculo.getAno());
+                veiculo.setCor(novoVeiculo.getCor());
+                veiculo.setCombustivel(novoVeiculo.getCombustivel());
+                veiculo.setQuilometragem(novoVeiculo.getQuilometragem());
+                veiculo.setChassi(novoVeiculo.getChassi());
                 veiculo.setAtivo(novoVeiculo.getAtivo());
 				// Relacionamento com cliente
                 if (novoVeiculo.getCliente() != null && novoVeiculo.getCliente().getIdCliente() != null) {
