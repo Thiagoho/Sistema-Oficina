@@ -33,12 +33,8 @@ public class Veiculo {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Combustivel combustivel = Combustivel.FLEX;
+	private Combustivel combustivel = Combustivel.Flex;
 	
-	public void setCombustivel(Combustivel combustivel) {
-		this.combustivel = combustivel;
-	}
-
 	private Integer quilometragem;
 
 	
@@ -133,6 +129,15 @@ public class Veiculo {
 
 	public Combustivel getCombustivel() {
 		return combustivel;
+	}
+	public void setCombustivel(String combustivel) {
+		if(combustivel == null) {
+		this.combustivel = null;
+		return;
+		}
+		try {
+			this.combustivel = Combustivel.valueOf(combustivel)
+		}
 	}
 
 	

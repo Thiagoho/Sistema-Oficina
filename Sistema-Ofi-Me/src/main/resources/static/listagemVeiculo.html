@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Listagem de Veículos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url('/public/imagemListagem.png') repeat;
+            background-size: cover;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .container {
+            background: rgba(10, 18, 38, 0.90);
+            border-radius: 18px;
+            box-shadow: 0 8px 38px 0 rgba(0,0,0,0.22);
+            padding: 30px 30px 20px 30px;
+            margin-top: 60px;
+            max-width: 980px;
+        }
+        h3, th, .table th { color: #fff !important; }
+        .table {
+            background: transparent;
+            color: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .table th, .table td {
+            color: #fff !important;
+            background: transparent;
+            border-bottom: 1.5px solid #232323;
+            padding: 14px 12px;
+            font-size: 1.06rem;
+        }
+        .table th {
+            background: rgba(35, 35, 35, 1) !important;
+            font-size: 1.13rem;
+            font-weight: 700;
+            border-bottom: 2.5px solid #444;
+        }
+        .table tbody tr:hover {
+            background: rgba(60, 110, 220, 0.11) !important;
+            transition: background 0.2s;
+        }
+        .btn-warning {
+            color: #fff !important;
+            background: linear-gradient(90deg, #f8be29 0%, #ffd259 100%);
+            border: 1px solid #fff2;
+            font-weight: 600;
+        }
+        .btn-danger {
+            color: #fff !important;
+            background: linear-gradient(90deg, #ed3e3e 0%, #ff6565 100%);
+            border: 1px solid #fff2;
+            font-weight: 600;
+        }
+        .btn-primary {
+            font-weight: 600;
+            background: #2b72ff;
+        }
+        .row.g-3 { margin-bottom: 12px; }
+        @media (max-width: 750px) {
+            .container { padding: 6px; }
+            h3 { font-size: 1.22rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container shadow">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3>Listagem de Veículos</h3>
+            <div>
+                <a href="veiculo.html" class="btn btn-primary me-2">Cadastrar Veículo</a>
+                <a href="dashboard.html" class="btn btn-warning me-2">Dashboard</a>
+            </div>
+        </div>
+        <!-- Filtros acima da tabela -->
+        <div class="row g-3 mt-2 mb-3">
+            <div class="col-md-3">
+                <input type="text" id="filtroModelo" placeholder="Filtrar por Modelo" class="form-control" onkeyup="filtrarVeiculos()" />
+            </div>
+            <div class="col-md-3">
+                <input type="text" id="filtroPlaca" placeholder="Filtrar por Placa" class="form-control" onkeyup="filtrarVeiculos()" />
+            </div>
+            <div class="col-md-3">
+                <input type="text" id="filtroAno" placeholder="Filtrar por Ano" class="form-control" onkeyup="filtrarVeiculos()" />
+            </div>
+            <div class="col-md-3">
+                <input type="text" id="filtroCliente" placeholder="Filtrar por Cliente" class="form-control" onkeyup="filtrarVeiculos()" />
+            </div>
+        </div>
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Modelo</th>
+                    <th>Placa</th>
+                    <th>Ano</th>
+                    <th>Cliente</th>
+                    <th style="width: 170px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="veiculosBody">
+                <!-- Conteúdo dinâmico via JS -->
+            </tbody>
+        </table>
+        <div id="mensagem" class="mt-3 text-center"></div>
+        <div class="d-flex justify-content-end mt-2">
+            <a href="login.html" class="btn btn-link">Voltar para o Login</a>
+        </div>
+    </div>
+    <script>
+        // Carrega todos os veículos
+        function carregarVeiculos() {
+            fetch('http://localhost:8080/api/veiculos')
+                .then(response => response.json())
+                .then(veiculos => {
+                    const tbody = document.getElementById('veiculosBody');
+                    tbody.innerHTML = '';
+                    if (!veiculos.length) {
+                        tbody.innerHTML = `<tr><td colspan="5" class="text-center">Nenhum veículo cadastrado.</td></tr>`;
+                        return;
+                    }
+                    veiculos.forEach(veiculo => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${veiculo.modelo}</td>
+                                <td>${veiculo.placa}</td>
+                                <td>${veiculo.ano || ''}</td>
+                                <td>${veiculo.cliente ? veiculo.cliente.nome : ''}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm me-1" onclick="editarVeiculo(${veiculo.idVeiculos})">Editar</button>
+                                    <button class="btn btn-danger btn-sm" onclick="excluirVeiculo(${veiculo.idVeiculos})">Excluir</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                })
+                .catch(() => {
+                    document.getElementById('mensagem').innerHTML =
+                        '<span class="text-danger">Erro ao carregar veículos.</span>';
+                });
+        }
+
+        function editarVeiculo(id) {
+            window.location.href = `editarVeiculo.html?id=${id}`;
+        }
+
+        function excluirVeiculo(id) {
+            if (!confirm('Tem certeza que deseja excluir este veículo?')) return;
+            fetch(`http://localhost:8080/api/veiculos/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    carregarVeiculos();
+                    document.getElementById('mensagem').innerHTML =
+                        '<span class="text-success">Veículo excluído com sucesso!</span>';
+                } else {
+                    throw new Error('Não foi possível excluir o veículo.');
+                }
+            })
+            .catch(error => {
+                document.getElementById('mensagem').innerHTML =
+                    '<span class="text-danger">Erro: ' + error.message + '</span>';
+            });
+        }
+
+        // Filtro multi-campo para a tabela
+        function filtrarVeiculos() {
+            let modelo = document.getElementById("filtroModelo").value.toLowerCase();
+            let placa = document.getElementById("filtroPlaca").value.toLowerCase();
+            let ano = document.getElementById("filtroAno").value.toLowerCase();
+            let cliente = document.getElementById("filtroCliente").value.toLowerCase();
+
+            let linhas = document.querySelectorAll("#veiculosBody tr");
+            linhas.forEach(linha => {
+                let tdModelo = linha.querySelector("td:nth-child(1)").textContent.toLowerCase();
+                let tdPlaca = linha.querySelector("td:nth-child(2)").textContent.toLowerCase();
+                let tdAno = linha.querySelector("td:nth-child(3)").textContent.toLowerCase();
+                let tdCliente = linha.querySelector("td:nth-child(4)").textContent.toLowerCase();
+
+                let mostrar = true;
+                if (modelo && !tdModelo.includes(modelo)) mostrar = false;
+                if (placa && !tdPlaca.includes(placa)) mostrar = false;
+                if (ano && !tdAno.includes(ano)) mostrar = false;
+                if (cliente && !tdCliente.includes(cliente)) mostrar = false;
+
+                linha.style.display = mostrar ? "" : "none";
+            });
+        }
+
+        window.onload = carregarVeiculos;
+    </script>
+</body>
+</html>

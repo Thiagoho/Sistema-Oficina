@@ -7,6 +7,7 @@ public class VeiculoDTO {
 	private String placa;
 	private Integer ano;
 	private String cor;
+	
 	private String combustivel;
 	private Integer quilometragem;
 	private Boolean ativo;
