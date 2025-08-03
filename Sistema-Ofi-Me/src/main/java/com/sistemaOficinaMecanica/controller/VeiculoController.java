@@ -68,6 +68,9 @@ public class VeiculoController {
                 if (novoVeiculo.getCliente() != null && novoVeiculo.getCliente().getIdCliente() != null) {
                     Cliente cliente = clienteRepository.findById(novoVeiculo.getCliente().getIdCliente())
                         .orElse(null);
+                    if (cliente == null) {
+                    	return ResponseEntity.badRequest().body("Cliente informado não existe.");
+                    }
                     veiculo.setCliente(cliente);
                 }
                 veiculoRepository.save(veiculo);

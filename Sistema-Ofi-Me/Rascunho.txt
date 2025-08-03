@@ -1,0 +1,3 @@
+Ótimo, você quer que a tela listagemVeiculo.html siga o mesmo padrão de visual dos seus outros cadastros, incluindo editar diretamente na listagem (como na sua imagem de fornecedores), com tudo visualmente integrado, correto?
+
+Vou montar o HTML completo já com o botão de editar (e um modal para edição inline, no estilo moderno, igual do Bootstrap), para que a experiência seja igual à sua tela de fornecedores:
