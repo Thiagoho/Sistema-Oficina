@@ -70,21 +70,6 @@ form button, form a.btn, #mensagem {
 				class="form-control" id="ano" min="1900" max="2100" required>
 		</div>
 		<div class="mb-3">
-			<label for="cor" class="form-label">Cor:</label> <input type="text"
-				class="form-control" id="cor">
-		</div>
-		<div class="mb-3">
-			<label for="combustivel" class="form-label">Combustível:</label> <select
-				class="form-control" id="combustivel">
-				<option value="">Selecione...</option>
-				<option value="Gasolina">GASOLINA</option>
-				<option value="Etanol">ETANOL</option>
-				<option value="Flex">Flex</option>
-				<option value="Diesel">DIESEL</option>
-				<option value="GNV">GNV</option>
-			</select>
-		</div>
-		<div class="mb-3">
 			<label for="quilometragem" class="form-label">Quilometragem:</label>
 			<input type="number" class="form-control" id="quilometragem">
 		</div>
@@ -137,8 +122,6 @@ form button, form a.btn, #mensagem {
             	    marca: document.getElementById('marca').value,
             	    placa: document.getElementById('placa').value,
             	    ano: parseInt(document.getElementById('ano').value),
-            	    cor: document.getElementById('cor').value,
-            	    combustivel: document.getElementById('combustivel').value,
             	    quilometragem: document.getElementById('quilometragem').value ? parseInt(document.getElementById('quilometragem').value) : null,
             	    ativo: parseInt(document.getElementById('ativo').value),
             	    idCliente: parseInt(document.getElementById('cliente').value)

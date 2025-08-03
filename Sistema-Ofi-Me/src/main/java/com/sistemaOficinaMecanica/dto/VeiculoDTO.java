@@ -6,9 +6,6 @@ public class VeiculoDTO {
 	private String marca;
 	private String placa;
 	private Integer ano;
-	private String cor;
-	
-	private String combustivel;
 	private Integer quilometragem;
 	private Boolean ativo;
 	private Long idCliente;
@@ -44,22 +41,6 @@ public class VeiculoDTO {
 
 	public void setAno(Integer ano) {
 		this.ano = ano;
-	}
-
-	public String getCor() {
-		return cor;
-	}
-
-	public void setCor(String cor) {
-		this.cor = cor;
-	}
-
-	public String getCombustivel() {
-		return combustivel;
-	}
-
-	public void setCombustivel(String combustivel) {
-		this.combustivel = combustivel;
 	}
 
 	public Integer getQuilometragem() {

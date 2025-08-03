@@ -29,11 +29,6 @@ public class Veiculo {
 	
 	private Integer ano;
 	
-	private String cor;
-	
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Combustivel combustivel = Combustivel.Flex;
 	
 	private Integer quilometragem;
 
@@ -86,13 +81,6 @@ public class Veiculo {
 		this.ano = ano;
 	}
 
-	public String getCor() {
-		return cor;
-	}
-
-	public void setCor(String cor) {
-		this.cor = cor;
-	}
 
 	public Integer getQuilometragem() {
 		return quilometragem;
@@ -127,21 +115,9 @@ public class Veiculo {
 		this.cliente = cliente;
 	}
 
-	public Combustivel getCombustivel() {
-		return combustivel;
-	}
-	public void setCombustivel(String combustivel) {
-		if(combustivel == null) {
-		this.combustivel = null;
-		return;
-		}
-		try {
-			this.combustivel = Combustivel.valueOf(combustivel)
-		}
 	}
 
 	
 	
 	
-	
-}
+
