@@ -3,11 +3,11 @@ package com.sistemaOficinaMecanica.servic;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import org.hibernate.id.IdentifierGenerationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sistemaOficinaMecanica.model.OrdemServico;
+import com.sistemaOficinaMecanica.model.*;
 import com.sistemaOficinaMecanica.model.enums.StatusOrdemServico;
 import com.sistemaOficinaMecanica.repository.OrdemServicoRepository;
 
