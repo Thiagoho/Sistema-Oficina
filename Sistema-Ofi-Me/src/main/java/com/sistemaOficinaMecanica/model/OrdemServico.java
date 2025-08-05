@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "ordens_servico")
-public class OrdensServico {
+public class OrdemServico {
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idOrdensServico;
