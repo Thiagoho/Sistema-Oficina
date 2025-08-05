@@ -15,9 +15,10 @@ public class OrdensServico {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idOrdensServico;
 	
-	
+	@Column(nullable = false, unique = true, length = 20)
 	private String mumeroOrdem;
 	
+	@Column(nullable = false)
 	private LocalDateTime dataEntrada;
 	
 	private LocalDateTime dataPrevisao;
@@ -38,20 +39,28 @@ public class OrdensServico {
 	@Lob
 	private String observacoes;
 	
+	
+	@Column(precision = 10, scale = 2)
 	private BigDecimal valorMaObra = BigDecimal.ZERO;
 	
+	@Column(precision = 10, scale = 2)
 	private BigDecimal valorPecas = BigDecimal.ZERO;
 	
+	@Column(precision = 10, scale = 2)
 	private BigDecimal valorTotal = BigDecimal.ZERO;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(length = 20, nullable = false)
 	private FormaPagamento formaPagamento = FormaPagamento.DINHEIRO;
 	
+	
+	@Column(nullable = false)
 	private LocalDateTime dataCadastro = LocalDateTime.now();
 	
+	@Column(nullable = false)
 	private LocalDateTime dataUltimaAlteracao = LocalDateTime.now();
 	
+	@Column(length = 50)
 	private String usuarioAlteracao;
 	
 	// Relacionamentos (Ex: muitos para um)
