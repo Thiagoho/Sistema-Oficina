@@ -16,7 +16,7 @@ public class OrdemServico {
 	private Integer idOrdensServico;
 	
 	@Column(nullable = false, unique = true, length = 20)
-	private String mumeroOrdem;
+	private String numeroOrdem;
 	
 	@Column(nullable = false)
 	private LocalDateTime dataEntrada;
@@ -84,12 +84,13 @@ public class OrdemServico {
 		this.idOrdensServico = idOrdensServico;
 	}
 
-	public String getMumeroOrdem() {
-		return mumeroOrdem;
+
+	public String getNumeroOrdem() {
+		return numeroOrdem;
 	}
 
-	public void setMumeroOrdem(String mumeroOrdem) {
-		this.mumeroOrdem = mumeroOrdem;
+	public void setNumeroOrdem(String numeroOrdem) {
+		this.numeroOrdem = numeroOrdem;
 	}
 
 	public LocalDateTime getDataEntrada() {
