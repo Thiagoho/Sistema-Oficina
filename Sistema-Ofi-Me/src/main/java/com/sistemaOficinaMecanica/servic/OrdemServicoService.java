@@ -60,7 +60,7 @@ public class OrdemServicoService {
 
 	
 	//Remove por ID
-	public void deletarPorId(Integer id) {
+	public void deletar(Integer id) {
 		ordemServicoRepository.deleteById(id);
 	}
 }
