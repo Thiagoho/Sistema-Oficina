@@ -3,3 +3,8 @@
 Vou montar o HTML completo já com o botão de editar (e um modal para edição inline, no estilo moderno, igual do Bootstrap), para que a experiência seja igual à sua tela de fornecedores:
 
 
+
+
+
+
+Você quer que a filtragem aconteça em tempo real, ou seja, enquanto o usuário digita já atualize a tabela automaticamente, sem precisar clicar no botão "Pesquisar".

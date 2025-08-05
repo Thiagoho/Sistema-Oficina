@@ -67,26 +67,16 @@ h3, th, .table th { color: #fff !important; }
 	<div class="d-flex justify-content-between align-items-center mb-4">
 		<h3>Listagem de Veículos</h3>
 		<div>
-			<a href="veiculo.html" class="btn btn-primary me-2">Cadastrar Veículo</a>
+			<button class="btn btn-primary me-2" onclick="abrirModalCadastro()">Cadastrar Veículo</button>
 			<a href="dashboard.html" class="btn btn-warning me-2">Dashboard</a>
 		</div>
 	</div>
-	<!-- Filtros acima da tabela -->
 	<div class="row g-3 mt-2 mb-3">
-		<div class="col-md-4">
-			<input type="text" id="filtroModelo" placeholder="Filtrar por Modelo" class="form-control">
-		</div>
-		<div class="col-md-4">
-			<input type="text" id="filtroPlaca" placeholder="Filtrar por Placa" class="form-control">
-		</div>
-		<div class="col-md-4">
-			<input type="text" id="filtroCliente" placeholder="Filtrar por Cliente" class="form-control">
-		</div>
+	    <div class="col-md-4">
+	        <input type="text" id="filtroModelo" placeholder="Filtrar por Modelo" class="form-control" oninput="filtrarVeiculos()">
+	    </div>
 	</div>
-	<div class="mb-3">
-		<button class="btn btn-success" onclick="filtrarVeiculos()">Pesquisar</button>
-		<button class="btn btn-secondary ms-2" onclick="limparFiltros()">Limpar Filtros</button>
-	</div>
+
 	<table class="table table-bordered align-middle">
 		<thead class="table-light">
 			<tr>
@@ -110,56 +100,19 @@ h3, th, .table th { color: #fff !important; }
 </div>
 </div>
 
-<!-- MODAL DE EDIÇÃO -->
-<div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+<!-- MODAL DE CADASTRO (vazio, será preenchido via JS) -->
+<div class="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
 	<div class="modal-dialog">
-		<div class="modal-content bg-dark text-light">
-			<form id="formEditarVeiculo">
-				<div class="modal-header">
-					<h5 class="modal-title" id="modalEditarLabel">Editar Veículo</h5>
-					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-				</div>
-				<div class="modal-body">
-					<input type="hidden" id="editarIdVeiculo">
-					<div class="mb-3">
-						<label for="editarModelo" class="form-label">Modelo:</label>
-						<input type="text" id="editarModelo" class="form-control" required>
-					</div>
-					<div class="mb-3">
-						<label for="editarMarca" class="form-label">Marca:</label>
-						<input type="text" id="editarMarca" class="form-control">
-					</div>
-					<div class="mb-3">
-						<label for="editarPlaca" class="form-label">Placa:</label>
-						<input type="text" id="editarPlaca" class="form-control" required>
-					</div>
-					<div class="mb-3">
-						<label for="editarAno" class="form-label">Ano:</label>
-						<input type="number" id="editarAno" class="form-control">
-					</div>
-					<div class="mb-3">
-						<label for="editarCliente" class="form-label">Cliente:</label>
-						<select id="editarCliente" class="form-control" required>
-							<option value="">Selecione o Cliente</option>
-						</select>
-					</div>
-					<div class="mb-3">
-						<label for="editarAtivo" class="form-label">Ativo:</label>
-						<select id="editarAtivo" class="form-control">
-							<option value="true">Sim</option>
-							<option value="false">Não</option>
-						</select>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-success">Salvar</button>
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-				</div>
-			</form>
+		<div class="modal-content bg-dark text-light" id="cadastroModalContent">
+			<!-- Formulário será carregado aqui via JS -->
 		</div>
 	</div>
 </div>
 
+<!-- MODAL DE EDIÇÃO será carregado dinamicamente -->
+<div id="editar-modal-container"></div>
+
+<!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 let veiculos = [];
@@ -202,6 +155,7 @@ function renderizarVeiculos(lista) {
     });
 }
 
+// Função para abrir o modal de edição
 function abrirModalEditar(id) {
     const veiculo = veiculos.find(v => v.idVeiculo === id);
     if (!veiculo) return;
@@ -215,105 +169,181 @@ function abrirModalEditar(id) {
     new bootstrap.Modal(document.getElementById('modalEditar')).show();
 }
 
-document.getElementById('formEditarVeiculo').addEventListener('submit', function(e){
-    e.preventDefault();
-    const id = document.getElementById('editarIdVeiculo').value;
-    const atualizado = {
-        idVeiculo: id,
-        modelo: document.getElementById('editarModelo').value,
-        marca: document.getElementById('editarMarca').value,
-        placa: document.getElementById('editarPlaca').value,
-        ano: parseInt(document.getElementById('editarAno').value),
-        idCliente: document.getElementById('editarCliente').value,
-        ativo: document.getElementById('editarAtivo').value === "true"
-    };
-    fetch(`http://localhost:8080/api/veiculos/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(atualizado)
-    })
-    .then(response => {
-        if (response.ok) {
-            carregarVeiculos();
-            bootstrap.Modal.getInstance(document.getElementById('modalEditar')).hide();
-            document.getElementById('mensagem').innerHTML =
-                '<span class="text-success">Veículo atualizado com sucesso!</span>';
-        } else {
-            return response.text().then(msg => { throw new Error(msg); });
-        }
-    })
-    .catch(error => {
-        document.getElementById('mensagem').innerHTML =
-            '<span class="text-danger">Erro: ' + error.message + '</span>';
-    });
-});
-
+// Função para excluir veículo
 function excluirVeiculo(id) {
     if (!confirm('Tem certeza que deseja excluir este veículo?')) return;
-    fetch(`http://localhost:8080/api/veiculos/${id}`, {
-        method: 'DELETE'
-    })
-    .then(response => {
-        if (response.ok) {
-            carregarVeiculos();
+    fetch(`http://localhost:8080/api/veiculos/${id}`, { method: 'DELETE' })
+        .then(response => {
+            if (response.ok) {
+                carregarVeiculos();
+                document.getElementById('mensagem').innerHTML =
+                    '<span class="text-success">Veículo excluído com sucesso!</span>';
+                setTimeout(() => {
+                    window.location.href = "listagemVeiculo.html"; // Redireciona após 3 segundos
+                }, 1000); // 3 segundos = 3000 ms
+            } else {
+                throw new Error('Não foi possível excluir o veículo.');
+            }
+        })
+        .catch(error => {
             document.getElementById('mensagem').innerHTML =
-                '<span class="text-success">Veículo excluído com sucesso!</span>';
-        } else {
-            throw new Error('Não foi possível excluir o veículo.');
-        }
-    })
-    .catch(error => {
-        document.getElementById('mensagem').innerHTML =
-            '<span class="text-danger">Erro: ' + error.message + '</span>';
-    });
+                '<span class="text-danger">Erro: ' + error.message + '</span>';
+        });
 }
 
-// Filtro multi-campo para a tabela
+
+// Filtro
 function filtrarVeiculos() {
-    let modelo = document.getElementById("filtroModelo").value.toLowerCase();
-    let placa = document.getElementById("filtroPlaca").value.toLowerCase();
-    let cliente = document.getElementById("filtroCliente").value.toLowerCase();
+	let modelo = document.getElementById("filtroModelo").value.toLowerCase();
+	let linhas = document.querySelectorAll("#veiculosBody tr");
+	linhas.forEach(linha => {
+	    let tdModelo = linha.querySelector("td:nth-child(1)").textContent.toLowerCase();
+	    let mostrar = true;
+	    if (modelo && !tdModelo.includes(modelo)) mostrar = false;
+	    linha.style.display = mostrar ? "" : "none";
+	});
+}
 
-    let linhas = document.querySelectorAll("#veiculosBody tr");
-    linhas.forEach(linha => {
-        let tdModelo = linha.querySelector("td:nth-child(1)").textContent.toLowerCase();
-        let tdPlaca = linha.querySelector("td:nth-child(3)").textContent.toLowerCase();
-        let tdCliente = linha.querySelector("td:nth-child(5)").textContent.toLowerCase();
+// MODAL DE CADASTRO (se você quiser, deixe igual já usava antes)
+function abrirModalCadastro() {
+    fetch('veiculo.html')
+        .then(resp => resp.text())
+        .then(html => {
+            let tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            let form = tempDiv.querySelector('form');
+            if (!form) {
+                document.getElementById('cadastroModalContent').innerHTML =
+                    "<div class='p-4 text-danger'>Erro ao carregar formulário de cadastro!</div>";
+            } else {
+                document.getElementById('cadastroModalContent').innerHTML = form.outerHTML;
+            }
+            new bootstrap.Modal(document.getElementById('modalCadastro')).show();
 
-        let mostrar = true;
-        if (modelo && !tdModelo.includes(modelo)) mostrar = false;
-        if (placa && !tdPlaca.includes(placa)) mostrar = false;
-        if (cliente && !tdCliente.includes(cliente)) mostrar = false;
+            // Preenche o select de clientes
+            let selectCliente = document.getElementById('cliente');
+            if (selectCliente) {
+                fetch('http://localhost:8080/api/clientes')
+                    .then(res => res.json())
+                    .then(clientes => {
+                        selectCliente.innerHTML = '<option value="">Selecione o Cliente</option>';
+                        clientes.forEach(cliente => {
+                            const opt = document.createElement('option');
+                            opt.value = cliente.idCliente;
+                            opt.textContent = cliente.nome;
+                            selectCliente.appendChild(opt);
+                        });
+                    });
+            }
+            // Evento de submit do formulário de cadastro
+            let formCadastro = document.getElementById('veiculoForm');
+            if (formCadastro) {
+                formCadastro.onsubmit = function(e) {
+                    e.preventDefault();
+                    const veiculo = {
+                        modelo: document.getElementById('modelo').value,
+                        marca: document.getElementById('marca').value,
+                        placa: document.getElementById('placa').value,
+                        ano: parseInt(document.getElementById('ano').value),
+                        quilometragem: document.getElementById('quilometragem').value ? parseInt(document.getElementById('quilometragem').value) : null,
+                        ativo: parseInt(document.getElementById('ativo').value),
+                        idCliente: parseInt(document.getElementById('cliente').value)
+                    };
+                    fetch('http://localhost:8080/api/veiculos', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(veiculo)
+                    })
+                    .then(resp => {
+                        if (resp.ok) {
+                            bootstrap.Modal.getInstance(document.getElementById('modalCadastro')).hide();
+                            carregarVeiculos();
+                            document.getElementById('mensagem').innerHTML =
+                                '<span class="text-success">Veículo cadastrado com sucesso!</span>';
+                    	    setTimeout(() => {
+                    	        window.location.href = "listagemVeiculo.html";
+                    	    }, 1000)
+                        } else {
+                            return resp.text().then(msg => { throw new Error(msg); });
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById('mensagem').innerHTML =
+                            '<span class="text-danger">Erro: ' + error.message + '</span>';
+                    });
+                };
+            }
+        })
+        .catch(() => {
+            document.getElementById('cadastroModalContent').innerHTML =
+                "<div class='p-4 text-danger'>Erro ao carregar formulário de cadastro!</div>";
+        });
+}
 
-        linha.style.display = mostrar ? "" : "none";
+// Carrega MODAL DE EDIÇÃO e os eventos necessários
+fetch('editarVeiculo.html')
+  .then(response => response.text())
+  .then(html => {
+    document.getElementById('editar-modal-container').innerHTML = html;
+
+    // Evento do form de edição
+    document.getElementById('formEditarVeiculo').addEventListener('submit', function(e){
+        e.preventDefault();
+        const id = document.getElementById('editarIdVeiculo').value;
+        const atualizado = {
+            idVeiculo: id,
+            modelo: document.getElementById('editarModelo').value,
+            marca: document.getElementById('editarMarca').value,
+            placa: document.getElementById('editarPlaca').value,
+            ano: parseInt(document.getElementById('editarAno').value),
+            idCliente: document.getElementById('editarCliente').value,
+            ativo: document.getElementById('editarAtivo').value === "true"
+        };
+        fetch(`http://localhost:8080/api/veiculos/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(atualizado)
+        })
+        .then(response => {
+        	if (response.ok) {
+        	    carregarVeiculos();
+        	    bootstrap.Modal.getInstance(document.getElementById('modalEditar')).hide();
+        	    document.getElementById('mensagem').innerHTML =
+        	        '<span class="text-success">Veículo atualizado com sucesso!</span>';
+        	    setTimeout(() => {
+        	        window.location.href = "listagemVeiculo.html";
+        	    }, 1000);
+        	} else {
+                return response.text().then(msg => { throw new Error(msg); });
+            }
+        })
+        .catch(error => {
+            document.getElementById('mensagem').innerHTML =
+                '<span class="text-danger">Erro: ' + error.message + '</span>';
+        });
     });
-}
-function limparFiltros() {
-	document.getElementById("filtroModelo").value = "";
-	document.getElementById("filtroPlaca").value = "";
-	document.getElementById("filtroCliente").value = "";
-	filtrarVeiculos();
-}
-window.onload = function() {
-    carregarVeiculos();
 
-    // Carregar os clientes no select de edição
+    // Preenche o select de clientes no modal de edição
     fetch('http://localhost:8080/api/clientes')
         .then(res => res.json())
         .then(clientes => {
             const select = document.getElementById('editarCliente');
-            select.innerHTML = '<option value="">Selecione o Cliente</option>';
-            clientes.forEach(cliente => {
-                const opt = document.createElement('option');
-                opt.value = cliente.idCliente;
-                opt.textContent = cliente.nome;
-                select.appendChild(opt);
-            });
+            if (select) {
+                select.innerHTML = '<option value="">Selecione o Cliente</option>';
+                clientes.forEach(cliente => {
+                    const opt = document.createElement('option');
+                    opt.value = cliente.idCliente;
+                    opt.textContent = cliente.nome;
+                    select.appendChild(opt);
+                });
+            }
         })
         .catch(() => {
             alert('Erro ao carregar clientes!');
         });
-};
+  });
+
+window.onload = carregarVeiculos;
 </script>
 </body>
 </html>

@@ -1,0 +1,49 @@
+<!-- editarVeiculo.html -->
+<div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content bg-dark text-light">
+			<form id="formEditarVeiculo">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalEditarLabel">Editar Veículo</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="editarIdVeiculo">
+					<div class="mb-3">
+						<label for="editarModelo" class="form-label">Modelo:</label>
+						<input type="text" id="editarModelo" class="form-control" required>
+					</div>
+					<div class="mb-3">
+						<label for="editarMarca" class="form-label">Marca:</label>
+						<input type="text" id="editarMarca" class="form-control">
+					</div>
+					<div class="mb-3">
+						<label for="editarPlaca" class="form-label">Placa:</label>
+						<input type="text" id="editarPlaca" class="form-control" required>
+					</div>
+					<div class="mb-3">
+						<label for="editarAno" class="form-label">Ano:</label>
+						<input type="number" id="editarAno" class="form-control">
+					</div>
+					<div class="mb-3">
+						<label for="editarCliente" class="form-label">Cliente:</label>
+						<select id="editarCliente" class="form-control" required>
+							<option value="">Selecione o Cliente</option>
+						</select>
+					</div>
+					<div class="mb-3">
+						<label for="editarAtivo" class="form-label">Ativo:</label>
+						<select id="editarAtivo" class="form-control">
+							<option value="true">Sim</option>
+							<option value="false">Não</option>
+						</select>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-success">Salvar</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
