@@ -1,226 +1,154 @@
-package com.sistemaOficinaMecanica.model;
+package com.sistemaOficinaMecanica.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.sistemaOficinaMecanica.model.enums.FormaPagamento;
+import com.sistemaOficinaMecanica.model.enums.PrioridadeOrdensServico;
+import com.sistemaOficinaMecanica.model.enums.StatusOrdemServico;
 
-import com.sistemaOficinaMecanica.model.enums.*;
-
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "ordens_servico")
-public class OrdemServico {
-	@Id 
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer idOrdensServico;
-	
-	@Column(nullable = false, unique = true, length = 20)
+public class OrdemServicoDTO {
+	private Integer IdOrdensServico;
 	private String numeroOrdem;
-	
-	@Column(nullable = false)
 	private LocalDateTime dataEntrada;
-	
 	private LocalDateTime dataPrevisao;
-	
 	private LocalDateTime dataSaida;
-	
-	@Enumerated(EnumType.STRING)
-	@Column(length = 20, nullable = false)
-	private StatusOrdemServico status = StatusOrdemServico.AGUARDANDO;
-	
-	@Enumerated(EnumType.STRING)
-	@Column(length = 10, nullable = false)
-	private PrioridadeOrdensServico prioridade = PrioridadeOrdensServico.NORMAL;
-	
-	@Lob
-	@Column(name = "problema_relatado")
-	private String problemaRelatado;
-	
-	@Lob
+	private StatusOrdemServico status;
+	private PrioridadeOrdensServico prioridade;
+	private String problemaRelatorio;
 	private String observacoes;
-	
-	
-
-	@Column(name = "valor_mao_obra")
-	private BigDecimal valorMaObra = BigDecimal.ZERO;
-	
-	@Column(precision = 10, scale = 2)
-	private BigDecimal valorPecas = BigDecimal.ZERO;
-	
-	@Column(precision = 10, scale = 2)
-	private BigDecimal valorTotal = BigDecimal.ZERO;
-	
-	@Enumerated(EnumType.STRING)
-	@Column(length = 20, nullable = false)
-	private FormaPagamento formaPagamento = FormaPagamento.DINHEIRO;
-	
-	
-	@Column(nullable = false)
-	private LocalDateTime dataCadastro = LocalDateTime.now();
-	
-	@Column(nullable = false)
-	private LocalDateTime dataUltimaAlteracao = LocalDateTime.now();
-	
-	@Column(length = 50)
+	private BigDecimal valorMaoObra;
+	private BigDecimal valorPecas;
+	private BigDecimal valorTotal;
+	private BigDecimal desconto;
+	private FormaPagamento formaPagamento;
+	private LocalDateTime dataCadastro;
+	private LocalDateTime dataUltimaAlteracao;
 	private String usuarioAlteracao;
 	
-	// Relacionamentos (Ex: muitos para um)
-	@ManyToOne
-	@JoinColumn(name = "id_veiculo", nullable = false)
-	private Veiculo veiculo;
-	
-	// Relacionamentos (Ex: muito para um)
-	@ManyToOne
-	@JoinColumn(name = "id_funcionario", nullable = false)
-	private Funcionario funcionario;
+	// Relacionamentos: Só os IDS!
+	private Integer idVeiculo;
+	private Integer idfuncionario;
 	
 	
-			//Getts & Setts
-
+	// Getts & Setts
 	public Integer getIdOrdensServico() {
-		return idOrdensServico;
+		return IdOrdensServico;
 	}
-
 	public void setIdOrdensServico(Integer idOrdensServico) {
-		this.idOrdensServico = idOrdensServico;
+		IdOrdensServico = idOrdensServico;
 	}
-
-
 	public String getNumeroOrdem() {
 		return numeroOrdem;
 	}
-
 	public void setNumeroOrdem(String numeroOrdem) {
 		this.numeroOrdem = numeroOrdem;
 	}
-
 	public LocalDateTime getDataEntrada() {
 		return dataEntrada;
 	}
-
 	public void setDataEntrada(LocalDateTime dataEntrada) {
 		this.dataEntrada = dataEntrada;
 	}
-
 	public LocalDateTime getDataPrevisao() {
 		return dataPrevisao;
 	}
-
 	public void setDataPrevisao(LocalDateTime dataPrevisao) {
 		this.dataPrevisao = dataPrevisao;
 	}
-
 	public LocalDateTime getDataSaida() {
 		return dataSaida;
 	}
-
 	public void setDataSaida(LocalDateTime dataSaida) {
 		this.dataSaida = dataSaida;
 	}
-
 	public StatusOrdemServico getStatus() {
 		return status;
 	}
-
 	public void setStatus(StatusOrdemServico status) {
 		this.status = status;
 	}
-
 	public PrioridadeOrdensServico getPrioridade() {
 		return prioridade;
 	}
-
 	public void setPrioridade(PrioridadeOrdensServico prioridade) {
 		this.prioridade = prioridade;
 	}
-
-	public String getProblemaRelatado() {
-		return problemaRelatado;
+	public String getProblemaRelatorio() {
+		return problemaRelatorio;
 	}
-
-	public void setProblemaRelatado(String problemaRelatado) {
-		this.problemaRelatado = problemaRelatado;
+	public void setProblemaRelatorio(String problemaRelatorio) {
+		this.problemaRelatorio = problemaRelatorio;
 	}
-
 	public String getObservacoes() {
 		return observacoes;
 	}
-
 	public void setObservacoes(String observacoes) {
 		this.observacoes = observacoes;
 	}
-
-	public BigDecimal getValorMaObra() {
-		return valorMaObra;
+	public BigDecimal getValorMaoObra() {
+		return valorMaoObra;
 	}
-
-	public void setValorMaObra(BigDecimal valorMaObra) {
-		this.valorMaObra = valorMaObra;
+	public void setValorMaoObra(BigDecimal valorMaoObra) {
+		this.valorMaoObra = valorMaoObra;
 	}
-
 	public BigDecimal getValorPecas() {
 		return valorPecas;
 	}
-
 	public void setValorPecas(BigDecimal valorPecas) {
 		this.valorPecas = valorPecas;
 	}
-
 	public BigDecimal getValorTotal() {
 		return valorTotal;
 	}
-
 	public void setValorTotal(BigDecimal valorTotal) {
 		this.valorTotal = valorTotal;
 	}
-
+	public BigDecimal getDesconto() {
+		return desconto;
+	}
+	public void setDesconto(BigDecimal desconto) {
+		this.desconto = desconto;
+	}
 	public FormaPagamento getFormaPagamento() {
 		return formaPagamento;
 	}
-
 	public void setFormaPagamento(FormaPagamento formaPagamento) {
 		this.formaPagamento = formaPagamento;
 	}
-
 	public LocalDateTime getDataCadastro() {
 		return dataCadastro;
 	}
-
 	public void setDataCadastro(LocalDateTime dataCadastro) {
 		this.dataCadastro = dataCadastro;
 	}
-
 	public LocalDateTime getDataUltimaAlteracao() {
 		return dataUltimaAlteracao;
 	}
-
 	public void setDataUltimaAlteracao(LocalDateTime dataUltimaAlteracao) {
 		this.dataUltimaAlteracao = dataUltimaAlteracao;
 	}
-
 	public String getUsuarioAlteracao() {
 		return usuarioAlteracao;
 	}
-
 	public void setUsuarioAlteracao(String usuarioAlteracao) {
 		this.usuarioAlteracao = usuarioAlteracao;
 	}
-
-	public Veiculo getVeiculo() {
-		return veiculo;
+	public Integer getIdVeiculo() {
+		return idVeiculo;
 	}
-
-	public void setVeiculo(Veiculo veiculo) {
-		this.veiculo = veiculo;
+	public void setIdVeiculo(Integer idVeiculo) {
+		this.idVeiculo = idVeiculo;
 	}
-
-	public Funcionario getFuncionario() {
-		return funcionario;
+	public Integer getIdfuncionario() {
+		return idfuncionario;
 	}
-
-	public void setFuncionario(Funcionario funcionario) {
-		this.funcionario = funcionario;
+	public void setIdfuncionario(Integer idfuncionario) {
+		this.idfuncionario = idfuncionario;
 	}
-
+	
+	// Você pode gerar pelo IDE (Ctrl + N no IntelliJ, Alt + Insert no VSCode)
+	
+	
+	
 }

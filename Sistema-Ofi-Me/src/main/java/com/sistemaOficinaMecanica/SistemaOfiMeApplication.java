@@ -7,6 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SistemaOfiMeApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SistemaOfiMeApplication.class, args);
-		System.out.println("What is my name?");
+		System.out.println("What is your name?");
 	}
 }
