@@ -3,7 +3,7 @@ package com.sistemaOficinaMecanica.model.enums;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum PrioridadeOrdensServico {
+public enum PrioridadeOrdemServico {
 	BAIXA("Baixa"),
 	NORMAL("Normal"),
 	ALTA("Alta"),
@@ -11,7 +11,7 @@ public enum PrioridadeOrdensServico {
 	
 	private final String descricao;
 	
-	PrioridadeOrdensServico(String descricao) {
+	PrioridadeOrdemServico(String descricao) {
 		this.descricao = descricao;
 	}
 	@JsonValue
@@ -21,8 +21,8 @@ public enum PrioridadeOrdensServico {
 	
 	// Adicione um método aqui:
 	@JsonCreator
-	public static PrioridadeOrdensServico fromDescricao(String descricao) {
-		for (PrioridadeOrdensServico p: values()) {
+	public static PrioridadeOrdemServico fromDescricao(String descricao) {
+		for (PrioridadeOrdemServico p: values()) {
 			if (p.getDescricao().equalsIgnoreCase(descricao)) {
 				return p;
 			}
