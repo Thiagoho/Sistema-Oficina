@@ -31,7 +31,7 @@ public class OrdemServico {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(length = 10, nullable = false)
-	private PrioridadeOrdensServico prioridade = PrioridadeOrdensServico.NORMAL;
+	private PrioridadeOrdemServico prioridade = PrioridadeOrdemServico.NORMAL;
 	
 	@Lob
 	@Column(name = "problema_relatado")
@@ -127,11 +127,11 @@ public class OrdemServico {
 		this.status = status;
 	}
 
-	public PrioridadeOrdensServico getPrioridade() {
+	public PrioridadeOrdemServico getPrioridade() {
 		return prioridade;
 	}
 
-	public void setPrioridade(PrioridadeOrdensServico prioridade) {
+	public void setPrioridade(PrioridadeOrdemServico prioridade) {
 		this.prioridade = prioridade;
 	}
 
