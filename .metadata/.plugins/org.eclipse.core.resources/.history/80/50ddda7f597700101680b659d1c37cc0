@@ -1,0 +1,61 @@
+package com.sistemaOficinaMecanica.controller;
+
+import com.sistemaOficinaMecanica.dto.OrdemServicoDTO;
+import com.sistemaOficinaMecanica.model.enums.FormaPagamento;
+import com.sistemaOficinaMecanica.model.enums.PrioridadeOrdemServico;
+import com.sistemaOficinaMecanica.model.enums.StatusOrdemServico;
+import com.sistemaOficinaMecanica.servic.FuncionarioServic;
+import com.sistemaOficinaMecanica.servic.OrdemServicoService;
+import com.sistemaOficinaMecanica.servic.VeiculoService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/ordens-servico")
+public class OrdemServicoViewController {
+
+    private final OrdemServicoService ordemServicoService;
+    private final VeiculoService veiculoService;
+    private final FuncionarioServic funcionarioServic; // seu nome de classe
+
+    public OrdemServicoViewController(OrdemServicoService ordemServicoService,
+                                      VeiculoService veiculoService,
+                                      FuncionarioServic funcionarioServic) {
+        this.ordemServicoService = ordemServicoService;
+        this.veiculoService = veiculoService;
+        this.funcionarioServic = funcionarioServic;
+    }
+
+    // Novo
+    @GetMapping("/novo")
+    public String novo(Model model) {
+        model.addAttribute("ordem", new OrdemServicoDTO());
+        model.addAttribute("statusValues", StatusOrdemServico.values());
+        model.addAttribute("prioridadeValues", PrioridadeOrdemServico.values());
+        model.addAttribute("pagamentoValues", FormaPagamento.values());
+        model.addAttribute("veiculos", veiculoService.listarTodos());
+        model.addAttribute("funcionarios", funcionarioServic.listarTodos());
+        return "ordem-servico-form"; // resources/templates/ordem-servico-form.html
+    }
+
+    // Editar
+    @GetMapping("/editar/{id}")
+    public String editar(@PathVariable Integer id, Model model) {
+        OrdemServicoDTO dto = ordemServicoService.buscarDtoPorId(id); // implemente no service/mapper
+        model.addAttribute("ordem", dto);
+        model.addAttribute("statusValues", StatusOrdemServico.values());
+        model.addAttribute("prioridadeValues", PrioridadeOrdemServico.values());
+        model.addAttribute("pagamentoValues", FormaPagamento.values());
+        model.addAttribute("veiculos", veiculoService.listarTodos());
+        model.addAttribute("funcionarios", funcionarioServic.listarTodos());
+        return "ordem-servico-form";
+    }
+
+    // Salvar (post do formulário)
+    @PostMapping("/salvar")
+    public String salvar(@ModelAttribute("ordem") OrdemServicoDTO dto) {
+        ordemServicoService.salvarDto(dto); // converta DTO->entidade e salve
+        return "redirect:/ordens-servico";  // depois faça a página de listagem
+    }
+}

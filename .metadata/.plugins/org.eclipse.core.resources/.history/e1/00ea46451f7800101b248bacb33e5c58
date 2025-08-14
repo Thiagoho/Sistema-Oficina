@@ -1,0 +1,147 @@
+package com.sistemaOficinaMecanica.controller;
+
+import com.sistemaOficinaMecanica.dto.OrdemServicoDTO;
+import com.sistemaOficinaMecanica.model.Funcionario;
+import com.sistemaOficinaMecanica.model.OrdemServico;
+import com.sistemaOficinaMecanica.model.Veiculo;
+import com.sistemaOficinaMecanica.service.FuncionarioService;
+import com.sistemaOficinaMecanica.service.OrdemServicoService;
+import com.sistemaOficinaMecanica.service.VeiculoService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/api/ordens-servico")
+public class OrdemServicoController {
+
+    private final OrdemServicoService ordemServicoService;
+    private final VeiculoService veiculoService;
+    private final FuncionarioService funcionarioService;
+
+    public OrdemServicoController(OrdemServicoService ordemServicoService,
+                                  VeiculoService veiculoService,
+                                  FuncionarioService funcionarioService) {
+        this.ordemServicoService = ordemServicoService;
+        this.veiculoService = veiculoService;
+        this.funcionarioService = funcionarioService;
+    }
+
+    /* ===== Helpers de conversão ===== */
+
+    private OrdemServicoDTO toDTO(OrdemServico e) {
+        OrdemServicoDTO dto = new OrdemServicoDTO();
+        dto.setIdOrdensServico(e.getIdOrdensServico());
+        dto.setNumeroOrdem(e.getNumeroOrdem());
+        dto.setDataEntrada(e.getDataEntrada());
+        dto.setDataPrevisao(e.getDataPrevisao());
+        dto.setDataSaida(e.getDataSaida());
+        dto.setStatus(e.getStatus());
+        dto.setPrioridade(e.getPrioridade());
+        dto.setProblemaRelatado(e.getProblemaRelatado());
+        dto.setObservacoes(e.getObservacoes());
+        dto.setValorMaoObra(e.getValorMaoObra());
+        dto.setValorPecas(e.getValorPecas());
+        dto.setValorTotal(e.getValorTotal());
+        dto.setDesconto(e.getDesconto());
+        dto.setFormaPagamento(e.getFormaPagamento());
+        dto.setDataCadastro(e.getDataCadastro());
+        dto.setDataUltimaAlteracao(e.getDataUltimaAlteracao());
+        dto.setUsuarioAlteracao(e.getUsuarioAlteracao());
+        dto.setIdVeiculo(e.getVeiculo() != null ? e.getVeiculo().getIdVeiculo() : null);
+        dto.setIdFuncionario(e.getFuncionario() != null ? e.getFuncionario().getIdFuncionario() : null);
+        return dto;
+    }
+
+    private OrdemServico toEntity(OrdemServicoDTO dto) {
+        OrdemServico e = new OrdemServico();
+        e.setIdOrdensServico(dto.getIdOrdensServico());
+        e.setNumeroOrdem(dto.getNumeroOrdem());
+        e.setDataEntrada(dto.getDataEntrada());
+        e.setDataPrevisao(dto.getDataPrevisao());
+        e.setDataSaida(dto.getDataSaida());
+        e.setStatus(dto.getStatus());
+        e.setPrioridade(dto.getPrioridade());
+        e.setProblemaRelatado(dto.getProblemaRelatado());
+        e.setObservacoes(dto.getObservacoes());
+        e.setValorMaoObra(dto.getValorMaoObra());
+        e.setValorPecas(dto.getValorPecas());
+        e.setValorTotal(dto.getValorTotal());
+        e.setDesconto(dto.getDesconto());
+        e.setFormaPagamento(dto.getFormaPagamento());
+        e.setDataCadastro(dto.getDataCadastro());
+        e.setDataUltimaAlteracao(dto.getDataUltimaAlteracao());
+        e.setUsuarioAlteracao(dto.getUsuarioAlteracao());
+
+        // Relacionamentos
+        if (dto.getIdVeiculo() != null) {
+            Optional<Veiculo> v = veiculoService.buscarPorId(dto.getIdVeiculo());
+            v.ifPresent(e::setVeiculo);
+        }
+        if (dto.getIdFuncionario() != null) {
+            Optional<Funcionario> f = funcionarioService.buscarPorId(dto.getIdFuncionario());
+            f.ifPresent(e::setFuncionario);
+        }
+
+        return e;
+    }
+
+    /* ===== Endpoints REST ===== */
+
+    // GET: lista todas as OS (DTO)
+    @GetMapping
+    public ResponseEntity<List<OrdemServicoDTO>> listarTodos() {
+        List<OrdemServicoDTO> lista = ordemServicoService.listarTodos()
+                .stream().map(this::toDTO).collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    // GET: busca OS por id (DTO)
+    @GetMapping("/{id}")
+    public ResponseEntity<OrdemServicoDTO> buscarPorId(@PathVariable Integer id) {
+        return ordemServicoService.buscarPorId(id)
+                .map(os -> ResponseEntity.ok(toDTO(os)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // POST: criar OS a partir de DTO
+    @PostMapping
+    public ResponseEntity<?> criar(@RequestBody OrdemServicoDTO dto) {
+        try {
+            OrdemServico salvo = ordemServicoService.salvar(toEntity(dto));
+            return ResponseEntity.created(URI.create("/api/ordens-servico/" + salvo.getIdOrdensServico()))
+                    .body(toDTO(salvo));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    // PUT: atualizar OS por id (DTO)
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody OrdemServicoDTO dto) {
+        if (ordemServicoService.buscarPorId(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        dto.setIdOrdensServico(id);
+        try {
+            OrdemServico atualizado = ordemServicoService.salvar(toEntity(dto));
+            return ResponseEntity.ok(toDTO(atualizado));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    // DELETE: remover OS por id
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        if (ordemServicoService.buscarPorId(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        ordemServicoService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+}
