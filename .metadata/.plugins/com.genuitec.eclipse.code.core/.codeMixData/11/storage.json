@@ -1,0 +1,18 @@
+{
+    "telemetry.machineId": "165047ae4c6e538757def3022789e48500f2096a0c9120d4e08f03f106ded120",
+    "openedPathsList": {
+        "workspaces3": [
+            {
+                "id": "2454c6c4ef6d69cb91bcb63126d61e50",
+                "configURIPath": "file:///c%3A/temp/sistema-oficina/.metadata/codemix.code-workspace"
+            },
+            {
+                "id": "7f6d9bda36107318d750a312b948b2a9",
+                "configURIPath": "file:///c%3A/eclipse/sistema-oficina/.metadata/codemix.code-workspace"
+            }
+        ],
+        "files2": []
+    },
+    "theme": "vs-dark",
+    "themeBackground": "#221a0f"
+}
