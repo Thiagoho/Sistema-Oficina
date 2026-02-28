@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.sistemaOficinaMecanica.model.enums.FormaPagamento;
-import com.sistemaOficinaMecanica.model.enums.PrioridadeOrdensServico;
+import com.sistemaOficinaMecanica.model.enums.PrioridadeOrdemServico;
 import com.sistemaOficinaMecanica.model.enums.StatusOrdemServico;
 
 public class OrdemServicoDTO {
@@ -14,7 +14,7 @@ public class OrdemServicoDTO {
 	private LocalDateTime dataPrevisao;
 	private LocalDateTime dataSaida;
 	private StatusOrdemServico status;
-	private PrioridadeOrdensServico prioridade;
+	private PrioridadeOrdemServico prioridade;
 	private String problemaRelatorio;
 	private String observacoes;
 	private BigDecimal valorMaoObra;
@@ -68,10 +68,10 @@ public class OrdemServicoDTO {
 	public void setStatus(StatusOrdemServico status) {
 		this.status = status;
 	}
-	public PrioridadeOrdensServico getPrioridade() {
+	public PrioridadeOrdemServico getPrioridade() {
 		return prioridade;
 	}
-	public void setPrioridade(PrioridadeOrdensServico prioridade) {
+	public void setPrioridade(PrioridadeOrdemServico prioridade) {
 		this.prioridade = prioridade;
 	}
 	public String getProblemaRelatorio() {
